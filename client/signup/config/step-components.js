@@ -10,6 +10,8 @@ var UserSignupComponent = require( 'signup/steps/user' ),
 	DomainsStepComponent = require( 'signup/steps/domains' ),
 	DesignTypeComponent = require( 'signup/steps/design-type' ),
 	SurveyStepComponent = require( 'signup/steps/survey' ),
+	MlbThemeSelectionComponent = require( 'signup/steps/mlb-theme-selection' ),
+	MlbDomainsStepComponent = require( 'signup/steps/mlb-domains' ),
 	config = require( 'config' );
 
 module.exports = {
@@ -26,5 +28,7 @@ module.exports = {
 	'design-type': DesignTypeComponent,
 	'themes-headstart': ThemeSelectionComponent,
 	'domains-with-theme': DomainsStepComponent,
-	'jetpack-user': UserSignupComponent
+	'jetpack-user': UserSignupComponent,
+	'mlb-themes': MlbThemeSelectionComponent,
+	'mlb-domains': MlbDomainsStepComponent
 };

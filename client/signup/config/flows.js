@@ -224,6 +224,27 @@ const flows = {
 		description: 'Signup flow for free trials',
 		lastModified: '2015-12-18'
 	},
+
+	'website-altthemes': {
+		steps: [ 'survey', 'altthemes', 'domains', 'plans', 'user' ],
+		destination: getSiteDestination,
+		description: 'Alternative theme selection for the users who clicked "Create Website" on the two-button homepage.',
+		lastModified: '2016-02-12'
+	},
+
+	'blog-altthemes': {
+		steps: [ 'survey', 'altthemes', 'domains', 'plans', 'user' ],
+		destination: getSiteDestination,
+		description: 'Alternative theme selection for the users who clicked "Create blog" on the two-button homepage.',
+		lastModified: '2016-02-12'
+	},
+
+	mlb: {
+		steps: [ 'mlb-themes', 'mlb-domains', 'user' ],
+		destination: '/me/next?welcome',
+		description: 'Major League Baseball Blogs Signup flow',
+		lastModified: '2015-11-22'
+	}
 };
 
 function removeUserStepFromFlow( flow ) {
