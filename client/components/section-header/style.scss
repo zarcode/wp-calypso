@@ -27,6 +27,7 @@
 
 .section-header__actions {
 	flex-grow: 0;
+	padding-left: 4px; // Accounts for the focus style of buttons
 	@include clear-fix;
 }
 
