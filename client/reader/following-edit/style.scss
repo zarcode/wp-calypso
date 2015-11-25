@@ -10,6 +10,18 @@
 		padding-right: 8px;
 	}
 
+	.section-header__button,
+	.following-edit-sort-controls {
+		transition: all 0.1s ease-in-out;
+	}
+
+	&.is-adding {
+		.section-header__button,
+		.following-edit-sort-controls {
+			transform: translateX( -50px );
+		}
+	}
+
 	.form-input-validation {
 		margin-top: -1em;
 		margin-bottom: -1em;
@@ -78,6 +90,16 @@
 	}
 
 	&.is-search-result {
+		padding: 8px 16px 8px 60px;
+		position: absolute;
+			right: 0;
+			top: 55px;
+			left: 0;
+		z-index: 35;
+		box-shadow: 0 0 0 1px $blue-wordpress,
+			0 0 0 4px $blue-light,
+			0 2px 6px rgba( $gray-dark, 0.3 );
+
 		.gridicon__follow {
 			fill: lighten( $gray, 20% );
 		}
@@ -110,13 +132,18 @@
 			display: block;
 		}
 
-		border-radius: 5px;
-		box-shadow: 0 0 0 2px #78dcfa;
-		position: absolute;
-		width: 100%;
-		top: 44px;
-		border: 1px solid #0087be;
-		z-index: 35;
+		.reader-list-item__title {
+			font-size: 15px;
+		}
+
+		.reader-list-item__title,
+		.reader-list-item__description {
+			margin-left: 0;
+		}
+
+		.reader-list-item__actions {
+			top: 6px;
+		}
 	}
 }
 
@@ -136,7 +163,7 @@
 		pointer-events: auto;
 
 		.gridicons-add-outline {
-			transform: translateX( 0 );
+			transform: translateX( 0 ) rotate( 0 );
 		}
 	}
 
@@ -148,10 +175,10 @@
 		position: absolute;
 			top: 13px;
 			left: 18px;
-			fill: $gray;
+			fill: $blue-medium;
 		z-index: 40;
-		transform: translateX( 50px );
-		transition: all 0.1s ease-in-out;
+		transform: translateX( 50px ) rotate( 180deg );
+		transition: all 0.15s cubic-bezier( 0.175, 0.885, 0.32, 1.275 );
 	}
 
 	.search__input[type="search"] {
