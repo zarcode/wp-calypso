@@ -6,6 +6,8 @@ import map from 'lodash/collection/map'
 import forEach from 'lodash/collection/forEach'
 import first from 'lodash/array/first'
 import includes from 'lodash/collection/includes'
+import find from 'lodash/collection/find'
+import merge from 'lodash/object/merge'
 import keys from 'lodash/object/keys'
 import debugModule from 'debug'
 
@@ -54,6 +56,27 @@ export default React.createClass( {
 		}
 	},
 
+	// If the user has set a sitename previously, use that for the
+	// initial username
+	combineWithSite( form ) {
+
+		if ( !this.props.signupProgressStore ) {
+			return form;
+		}
+
+		let siteStepProgress = find( this.props.signupProgressStore, function( step ) {
+			return step.stepName === 'site';
+		} );
+		let usernameValue = formState.getFieldValue( form, 'username' );
+		let usernameUninitalized = usernameValue === null || usernameValue === '';
+		if ( usernameUninitalized && siteStepProgress ) {
+			return merge( form, { username: {
+				value: siteStepProgress.site
+			} } );
+		}
+		return form;
+	},
+
 	componentWillMount() {
 		debug( 'Mounting the SignupForm React component.' );
 		this.formStateController = new formState.Controller( {
@@ -66,7 +89,9 @@ export default React.createClass( {
 			hideFieldErrorsOnChange: true,
 			initialState: this.props.step ? this.props.step.form : undefined
 		} );
-		this.setState( { form: this.formStateController.getInitialState() } );
+		this.setState( {
+			form: this.combineWithSite( this.formStateController.getInitialState() )
+		} );
 	},
 
 	sanitizeEmail( email ) {
