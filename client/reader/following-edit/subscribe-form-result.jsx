@@ -29,7 +29,6 @@ var FollowingEditSubscribeFormResult = React.createClass( {
 
 		return (
 			<ListItem className={ classes }>
-				<Icon><SiteIcon size={ 48 } /></Icon>
 				<Title>{ this.props.url }</Title>
 				<Description>{ message }</Description>
 				<Actions>
