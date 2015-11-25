@@ -382,7 +382,7 @@ var FollowingEdit = React.createClass( {
 				{ subscriptionsToDisplay.length === 0 && this.props.search ?
 					<NoResults text={ this.translate( 'No subscriptions match that search.' ) } /> :
 				
-				<InfiniteList role="main"
+				<InfiniteList className="following-edit__sites" role="main"
 					items={ subscriptionsToDisplay }
 					lastPage={ this.state.isLastPage }
 					fetchingNextPage={ this.state.isLoading }

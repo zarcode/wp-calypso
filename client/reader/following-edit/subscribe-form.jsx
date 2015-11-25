@@ -47,6 +47,7 @@ var FollowingEditSubscribeForm = React.createClass( {
 
 		// Clear the search field
 		this.refs.followingEditSubscriptionSearch.clear();
+		this.props.onSearchClose();
 
 		// Call onFollow method on the parent
 		this.props.onFollow();
