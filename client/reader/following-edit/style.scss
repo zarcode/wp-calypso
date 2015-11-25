@@ -6,6 +6,10 @@
 		margin: 0;
 	}
 
+	.section-header {
+		padding-right: 8px;
+	}
+
 	.form-input-validation {
 		margin-top: -1em;
 		margin-bottom: -1em;
@@ -117,22 +121,24 @@
 }
 
 .following-edit__subscribe-form {
-	.search {
-		margin-bottom: 0;
-	}
+	position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+	z-index: 41; // Above the feed search
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.15s ease-in-out;
 
-	.search__input[type="search"] {
-		height: 38px;
-		padding-left: 33px;
-		border: 1px solid #c8d7e1;
+	.is-adding & {
+		opacity: 1;
+		pointer-events: auto;
 
-		&:focus {
-			border-color: #0087be;
- 			box-shadow: 0 0 0 2px #78dcfa;
+		.gridicons-add-outline {
+			transform: translateX( 0 );
 		}
 	}
-
-	position: relative;
 
 	.noticon {
 		display: none;
@@ -140,27 +146,22 @@
 
 	.gridicons-add-outline {
 		position: absolute;
-		top: 7px;
-		left: 6px;
-		fill: #12b0df;
+			top: 14px;
+			left: 18px;
+			fill: $gray;
 		z-index: 40;
+		transform: translateX( 50px );
+		transition: all 0.15s ease-in-out;
 	}
 
-	.noticon-close-alt {
-		top: -12px;
-		right: -8px;
-		color: $gray;
+	.search__input[type="search"] {
+		height: 50px;
 	}
 }
-
 
 .following-edit-navigation {
 	min-height: 25px;
 	margin-bottom: 0.5em;
-}
-
-.following-edit-navigation__site-count {
-	color: $gray;
 }
 
 .following-edit__notification-settings-card {
@@ -240,12 +241,12 @@
 }
 
 .following-edit__existing-feed-search {
+	margin-top: 24px;
 	margin-bottom: 0;
-	margin-left: -1px;
+	box-shadow: 0 0 0 1px transparentize( lighten( $gray, 20% ), .5 ),
+		0 1px 2px lighten( $gray, 30% );
 
-	.search__input[type="search"] {
-		box-shadow: inset 0 0 0 1px lighten( $gray, 20% );
-	}
+	.search__input[type="search"] {}
 
 	.noticon-close-alt {
 		right: 191px;
@@ -253,29 +254,17 @@
 }
 
 .following-edit-sort-controls {
-	position: absolute;
-		right: -1px;
-	z-index: 30;
-	background-color: $gray-light;
-	padding: 13px 8px 0 16px;
-	box-shadow: inset 0px 0px 0px 1px lighten( $gray, 20% );
-	min-height: 51px;
-	box-sizing: border-box;
+	float: left;
 
 	label {
-		vertical-align: middle;
-		color: $gray;
-		display: inline-block;
-		font-size: 13px;
-		font-weight: 600;
-		margin-top: -1px;
-		margin-right: 6px;
+		display: none;
 	}
 
-	select {
-		vertical-align: middle;
-		min-width: 100px;
-		display: inline;
+	select.is-compact {
+		padding: 2px 20px 2px 6px;
+		margin: 0 8px 0 0;
+		font-size: 13px;
+		color: $gray;
 	}
 }
 
