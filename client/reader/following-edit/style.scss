@@ -129,7 +129,7 @@
 	z-index: 41; // Above the feed search
 	opacity: 0;
 	pointer-events: none;
-	transition: all 0.15s ease-in-out;
+	transition: all 0.1s ease-in-out;
 
 	.is-adding & {
 		opacity: 1;
@@ -146,12 +146,12 @@
 
 	.gridicons-add-outline {
 		position: absolute;
-			top: 14px;
+			top: 13px;
 			left: 18px;
 			fill: $gray;
 		z-index: 40;
 		transform: translateX( 50px );
-		transition: all 0.15s ease-in-out;
+		transition: all 0.1s ease-in-out;
 	}
 
 	.search__input[type="search"] {
@@ -228,7 +228,7 @@
 	.gridicon {
 		fill: $gray;
 		transform: rotate(0deg);
-		transition: transform .15s cubic-bezier(0.175, .885, .32, 1.275), color .20s ease-in;
+		transition: transform .1s cubic-bezier(0.175, .885, .32, 1.275), color .20s ease-in;
 
 		.is-expanded & {
 			transform: rotate(90deg);
@@ -247,10 +247,6 @@
 		0 1px 2px lighten( $gray, 30% );
 
 	.search__input[type="search"] {}
-
-	.noticon-close-alt {
-		right: 191px;
-	}
 }
 
 .following-edit-sort-controls {

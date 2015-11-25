@@ -312,10 +312,6 @@ var FollowingEdit = React.createClass( {
 		this.setState( {
 			isAddingSite: ! this.state.isAddingSite
 		} );
-
-		if ( ! this.state.isAddingSite ) {
-			this.refs.followingEditSubscriptionSearch.getDOMNote().focus();
-		}
 	},
 
 	render: function() {
@@ -363,14 +359,15 @@ var FollowingEdit = React.createClass( {
 					<FollowingEditSortControls onSelectChange={ this.handleSortOrderChange } sortOrder={ this.state.sortOrder } />
 
 					<SectionHeaderButton onClick={ this.toggleAddUI }>
-						{ this.translate( 'Add' ) }
+						{ this.translate( 'Add Site' ) }
 					</SectionHeaderButton>
 
 					<FollowingEditSubscribeForm
 						onSearch={ this.handleNewSubscriptionSearch }
 						onSearchClose={ this.handleNewSubscriptionSearchClose }
 						onFollow={ this.handleFollow }
-						initialSearchString={ this.props.initialFollowUrl } />
+						initialSearchString={ this.props.initialFollowUrl }
+						isFocused={ this.state.isAddingSite } />
 				</SectionHeader>
 				
 				<Search

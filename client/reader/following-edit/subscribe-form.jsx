@@ -19,7 +19,8 @@ var FollowingEditSubscribeForm = React.createClass( {
 		onSearch: React.PropTypes.func,
 		onSearchClose: React.PropTypes.func,
 		onFollow: React.PropTypes.func,
-		initialSearchString: React.PropTypes.string
+		initialSearchString: React.PropTypes.string,
+		isFocused: React.PropTypes.bool
 	},
 
 	getDefaultProps: function() {
@@ -27,7 +28,8 @@ var FollowingEditSubscribeForm = React.createClass( {
 			onSearch: noop,
 			onSearchClose: noop,
 			onFollow: noop,
-			initialSearchString: ''
+			initialSearchString: '',
+			isFocused: false
 		}
 	},
 
@@ -143,9 +145,9 @@ var FollowingEditSubscribeForm = React.createClass( {
 					ref="followingEditSubscriptionSearch"
 					onKeyDown={ this.handleKeyDown }
 					disableAutocorrect={ true }
-					autoFocus={ true }
 					initialValue={ this.props.initialSearchString }
 					forceCloseButton={ true }
+					autoFocus={ this.props.isFocused }
 				/>
 				{ searchResult }
 			</div>
