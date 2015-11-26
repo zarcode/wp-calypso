@@ -36,6 +36,12 @@ var siteUrlsSearched = [],
 module.exports = React.createClass( {
 	displayName: 'Site',
 
+	getDefaultProps: function() {
+		return {
+			domain: '.wordpress.com'
+		};
+	},
+
 	getInitialState: function() {
 		return {
 			form: null,
@@ -174,7 +180,7 @@ module.exports = React.createClass( {
 
 	save: function() {
 		SignupActions.saveSignupStep( {
-			stepName: 'site',
+			stepName: this.props.stepName,
 			form: this.state.form
 		} );
 	},
@@ -238,7 +244,7 @@ module.exports = React.createClass( {
 				isValid={ formState.isFieldValid( this.state.form, 'site' ) }
 				onBlur={ this.handleBlur }
 				onChange={ this.handleChangeEvent } />
-			<span className='site-signup-step__wordpress-domain-suffix'>.wordpress.com</span>
+			<span className='site-signup-step__wordpress-domain-suffix'>{ this.props.domain }</span>
 		</ValidationFieldset>;
 	},
 
