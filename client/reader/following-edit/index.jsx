@@ -331,12 +331,12 @@ var FollowingEdit = React.createClass( {
 		if ( ! subscriptionsToDisplay || subscriptionsToDisplay.length < initialLoadFeedCount ) {
 			// If we don't have any data after a fetch has happened, show EmptyContent
 			if ( this.props.isLastPage ) {
-				return ( <EmptyContent title={ this.translate( 'No subscribed feeds found.' ) } /> );
+				return ( <EmptyContent title={ this.translate( 'No followed sites found.' ) } /> );
 			}
 		}
 
 		if ( this.state.windowWidth && this.state.windowWidth > 960 ) {
-			searchPlaceholder = this.translate( 'Search your followed feeds' );
+			searchPlaceholder = this.translate( 'Search the sites you follow' );
 		} else {
 			searchPlaceholder = this.translate( 'Search' );
 		}
@@ -380,7 +380,7 @@ var FollowingEdit = React.createClass( {
 				{ this.state.isAttemptingFollow && ! this.state.lastError ? <SubscriptionPlaceholder key={ 'placeholder-add-feed' } /> : null }
 				
 				{ subscriptionsToDisplay.length === 0 && this.props.search ?
-					<NoResults text={ this.translate( 'No subscriptions match that search.' ) } /> :
+					<NoResults text={ this.translate( 'No sites match that search.' ) } /> :
 				
 				<InfiniteList className="following-edit__sites" role="main"
 					items={ subscriptionsToDisplay }
