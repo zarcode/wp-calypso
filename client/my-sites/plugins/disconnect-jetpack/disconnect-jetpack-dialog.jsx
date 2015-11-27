@@ -1,30 +1,32 @@
 /**
  * External dependencies
  */
-var page = require( 'page' ),
-	React = require( 'react' );
+import page from 'page';
+import React from 'react';
 
 /**
  * Internal dependencies
  */
-var sites = require( 'lib/sites-list' )(),
-	Dialog = require( 'components/dialog' ),
-	analytics = require( 'analytics' ),
-	SitesListActions = require( 'lib/sites-list/actions' );
+import sitesListFactory from 'lib/sites-list';
+import Dialog from 'components/dialog';
+import analytics from 'analytics';
+import SitesListActions from 'lib/sites-list/actions';
+
+const sites = sitesListFactory();
 
 module.exports = React.createClass( {
 
 	displayName: 'DisconnectJetpackDialog',
 
-	getInitialState: function() {
+	getInitialState() {
 		return { showJetpackDisconnectDialog: false };
 	},
 
-	open: function() {
+	open() {
 		this.setState( { showJetpackDisconnectDialog: true } );
 	},
 
-	close: function( action ) {
+	close( action ) {
 		this.setState( { showJetpackDisconnectDialog: false } );
 		if ( action === 'continue' ) {
 			this.disconnectJetpack();
@@ -34,12 +36,12 @@ module.exports = React.createClass( {
 		}
 	},
 
-	jetpackSiteRemain: function( site ) {
+	jetpackSiteRemain( site ) {
 		return site.capabilities && site.capabilities.manage_options && site.ID !== this.props.site.ID;
 	},
 
-	disconnectJetpack: function() {
-		var jetpackSites = sites.getJetpack();
+	disconnectJetpack() {
+		const jetpackSites = sites.getJetpack();
 
 		// remove any error and completed notices
 		SitesListActions.removeSitesNotices( [ { status: 'error' }, { status: 'completed' } ] );
@@ -58,19 +60,19 @@ module.exports = React.createClass( {
 		page.redirect( '/sites' );
 	},
 
-	render: function() {
-		var moreInfo,
-			deactivationButtons = [
-				{
-					action: 'cancel',
-					label: this.translate( 'Cancel' )
-				},
-				{
-					action: 'continue',
-					label: this.translate( 'Disconnect' ),
-					isPrimary: true
-				}
-			];
+	render() {
+		let moreInfo;
+		const deactivationButtons = [
+			{
+				action: 'cancel',
+				label: this.translate( 'Cancel' )
+			},
+			{
+				action: 'continue',
+				label: this.translate( 'Disconnect' ),
+				isPrimary: true
+			}
+		];
 
 		if ( this.props.site && this.props.site.name || this.props.site && this.props.site.title ) {
 			moreInfo = this.translate(
