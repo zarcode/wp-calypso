@@ -36,6 +36,7 @@ import {
 	isPaidWithCreditCard,
 	isRedeemable,
 	isRefundable,
+	isRemovable,
 	isRenewable,
 	isRenewing,
 	isIncludedWithPlan,
@@ -285,7 +286,11 @@ const ManagePurchase = React.createClass( {
 		}
 
 		if ( isIncludedWithPlan( purchase ) ) {
-			return this.translate( 'Included with plan' );
+			return (
+				<span className="manage-purchase__detail">
+					{ this.translate( 'Included with plan' ) }
+				</span>
+			);
 		}
 
 		if ( hasPaymentMethod( purchase ) ) {
@@ -296,7 +301,7 @@ const ManagePurchase = React.createClass( {
 			}
 
 			return (
-				<span className="manage-purchase__payment-info">
+				<span className="manage-purchase__detail">
 					<PaymentLogo type={ paymentLogoType( purchase ) } />
 					{ paymentInfo }
 				</span>
@@ -427,6 +432,32 @@ const ManagePurchase = React.createClass( {
 		}
 	},
 
+	renderRemovePurchaseInformation() {
+		const purchase = getPurchase( this.props ),
+			contactSupportUrl = 'https://support.wordpress.com/contact/';
+
+		if ( ! isRemovable( purchase ) ) {
+			return null;
+		}
+
+		return (
+			<div className="manage-purchase__remove-box">
+				<em className="manage-purchase__remove-text">{ this.translate(
+					'{{strong}}Looking to remove this purchase?{{/strong}} Please {{a}}contact support{{/a}} to remove %(purchaseName)s from your account.',
+					{
+						args: {
+							purchaseName: getName( purchase )
+						},
+						components: {
+							a: <a href={ contactSupportUrl } target="_blank" />,
+							strong: <strong />
+						}
+					}
+				) }</em>
+			</div>
+		);
+	},
+
 	renderEditPaymentMethodNavItem() {
 		const purchase = getPurchase( this.props ),
 			{ domain, id, payment } = purchase;
@@ -446,7 +477,7 @@ const ManagePurchase = React.createClass( {
 		const purchase = getPurchase( this.props ),
 			{ domain, id } = purchase;
 
-		if ( isExpired( purchase ) || ! isCancelable( purchase ) ) {
+		if ( ! isCancelable( purchase ) ) {
 			return null;
 		}
 
@@ -492,6 +523,7 @@ const ManagePurchase = React.createClass( {
 			price,
 			renewsOrExpiresOnLabel,
 			renewsOrExpiresOn,
+			removePurchaseInformation,
 			renewButton,
 			expiredRenewNotice,
 			editPaymentMethodNavItem,
@@ -515,12 +547,13 @@ const ManagePurchase = React.createClass( {
 			productLink = this.renderProductLink();
 			price = this.renderPrice();
 			renewsOrExpiresOnLabel = this.renderRenewsOrExpiresOnLabel();
+			renewsOrExpiresOn = this.renderRenewsOrExpiresOn();
+			removePurchaseInformation = this.renderRemovePurchaseInformation();
 			renewButton = this.renderRenewButton();
 			expiredRenewNotice = this.renderExpiredRenewNotice();
 			editPaymentMethodNavItem = this.renderEditPaymentMethodNavItem();
 			cancelPurchaseNavItem = this.renderCancelPurchaseNavItem();
 			cancelPrivateRegistrationNavItem = this.renderCancelPrivateRegistration();
-			renewsOrExpiresOn = this.renderRenewsOrExpiresOn();
 		}
 
 		return (
@@ -550,6 +583,7 @@ const ManagePurchase = React.createClass( {
 						</li>
 						{ this.renderPaymentDetails() }
 					</ul>
+					{ removePurchaseInformation }
 					{ renewButton }
 				</Card>
 
