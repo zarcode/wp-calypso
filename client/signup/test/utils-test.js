@@ -124,3 +124,26 @@ describe( 'utils.getValidPath - currentFlowName === defaultFlowName', function()
 	} );
 } );
 
+describe('utils.autoFillField', function() {
+	let testStore = [ { stepName: 'empty' }, { stepName: 'site', site: 'calypso' } ];
+	let config = {
+			stepName: 'site',
+			fieldToTake: 'site',
+			fieldToMerge: 'username',
+			signupProgressStore: testStore
+		};
+
+	it('should auto fill a field if it has not been initialized', function() {
+		let testForm = { username: { value: null } };
+		config.form = testForm;
+		assert.deepEqual( utils.autoFillField( config ),
+			{ username: { value: 'calypso' } } );
+	} );
+
+	it('should return the unchanged form if there is alread a value.', function() {
+		let testForm = { username: { value: 'wordpress' } };
+		config.form = testForm;
+		assert.equal( utils.autoFillField( config ),
+			testForm );
+	});
+});

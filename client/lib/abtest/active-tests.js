@@ -45,4 +45,12 @@ module.exports = {
 		},
 		defaultVariation: 'drake'
 	},
+	autoFillUsernameSignup: {
+		datestamp: '20151201',
+		variations: {
+			autoFill: 50,
+			dontAutoFill: 50
+		},
+		defaultVariation: 'dontAutoFill'
+	}
 };
