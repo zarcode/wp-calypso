@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var files;
 
-require( 'babel/register' );
+require( 'babel-register' );
 
 /**
  * External dependencies
