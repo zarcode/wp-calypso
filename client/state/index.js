@@ -23,6 +23,7 @@ import currentUser from './current-user/reducer';
 import ui from './ui/reducer';
 import comments from './comments/reducer';
 import googleAppsUsers from './google-apps-users/reducer';
+import offlineQueue from './offlineActionQueue/middleware';
 
 /**
  * Module variables
@@ -56,6 +57,7 @@ if ( typeof window === 'object' ) {
 	];
 }
 
+middleware.push( offlineQueue );
 let createStoreWithMiddleware = applyMiddleware.apply( null, middleware );
 
 export function createReduxStore( initialState = {} ) {
