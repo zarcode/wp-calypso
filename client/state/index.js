@@ -24,6 +24,7 @@ import ui from './ui/reducer';
 import comments from './comments/reducer';
 import googleAppsUsers from './google-apps-users/reducer';
 import offlineQueue from './offlineActionQueue/middleware';
+import connectionMiddleware from './offlineActionQueue/reducer';
 
 /**
  * Module variables
@@ -44,7 +45,8 @@ export const reducer = combineReducers( {
 	currentUser,
 	ui,
 	comments,
-	googleAppsUsers
+	googleAppsUsers,
+	connectionMiddleware
 } );
 
 let middleware = [ thunkMiddleware ];
