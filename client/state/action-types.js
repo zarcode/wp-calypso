@@ -8,6 +8,7 @@
  *  - https://wpcalypso.wordpress.com/devdocs/docs/our-approach-to-data.md#actions
  */
 
+export const OFFLINE_QUEUE_ACTION = 'OFFLINE_QUEUE_ACTION';
 export const CONNECTION_LOST = 'CONNECTION_LOST';
 export const CONNECTION_RESTORED = 'CONNECTION_RESTORED';
 export const COMMENTS_COUNT_RECEIVE = 'COMMENTS_COUNT_RECEIVE';
