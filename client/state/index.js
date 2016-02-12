@@ -24,7 +24,8 @@ import ui from './ui/reducer';
 import comments from './comments/reducer';
 import googleAppsUsers from './google-apps-users/reducer';
 import offlineQueue from './offlineActionQueue/middleware';
-import connectionMiddleware from './offlineActionQueue/reducer';
+import connectionMiddleware from './connectionMiddleware/middleware';
+import connectionMiddlewareReducer from './connectionMiddleware/reducer';
 
 /**
  * Module variables
@@ -46,7 +47,7 @@ export const reducer = combineReducers( {
 	ui,
 	comments,
 	googleAppsUsers,
-	connectionMiddleware
+	connectionMiddlewareReducer
 } );
 
 let middleware = [ thunkMiddleware ];
@@ -59,7 +60,7 @@ if ( typeof window === 'object' ) {
 	];
 }
 
-middleware.push( offlineQueue );
+middleware.push( connectionMiddleware );
 let createStoreWithMiddleware = applyMiddleware.apply( null, middleware );
 
 export function createReduxStore( initialState = {} ) {
