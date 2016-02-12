@@ -47,7 +47,7 @@ export const reducer = combineReducers( {
 	ui,
 	comments,
 	googleAppsUsers,
-	connectionMiddlewareReducer
+	connectionMiddleware: connectionMiddlewareReducer
 } );
 
 let middleware = [ thunkMiddleware ];
