@@ -99,7 +99,7 @@ export default React.createClass( {
 					}
 					summary={ exportButton }
 					expandedSummary={ exportButton }
-					>
+				>
 					<AdvancedSettings
 						postType={ postType }
 						shouldShowProgress={ shouldShowProgress }
