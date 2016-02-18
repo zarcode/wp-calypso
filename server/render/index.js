@@ -3,17 +3,16 @@
  */
 import ReactDomServer from 'react-dom/server';
 import Helmet from 'react-helmet';
-import memoize from 'lodash/function/memoize';
 import superagent from 'superagent';
-import Lru from 'lru-cache';
 
 /**
  * Internal dependencies
  */
 import config from 'config';
+import Cache from 'cache';
 
-const markupCache = new Lru( { max: 1000 } );
-const memoizedRenderToString = memoize( ReactDomServer.renderToString, element => JSON.stringify( element ) );
+const markupCache = new Cache();
+const memoizedRenderToString = markupCache.memoize( ReactDomServer.renderToString, element => JSON.stringify( element ) );
 
 function bumpStat( group, name ) {
 	const url = `http://pixel.wp.com/g.gif?v=wpcom-no-pv&x_${ group }=${ name }&t=${ Math.random() }`;
@@ -24,9 +23,8 @@ function bumpStat( group, name ) {
 }
 
 export function render( element ) {
-	memoizedRenderToString.cache = markupCache;
-
-	if ( ! memoizedRenderToString.cache.has( JSON.stringify( element ) ) ) {
+	if ( ! markupCache.get( JSON.stringify( element ) ) ) {
+		console.log( 'miss' );
 		bumpStat( 'calypso-ssr', 'loggedout-design-cache-miss' );
 	}
 
