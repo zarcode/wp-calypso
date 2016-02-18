@@ -329,10 +329,14 @@ Undocumented.prototype.settings = function( siteId, method, data, fn ) {
 		data = {};
 	}
 
-	this.wpcom.req[ method ]( {
-		path: '/sites/' + siteId + '/settings',
-		body: data
-	}, fn );
+	var path = '/sites/' + siteId + '/settings',
+		params = { apiVersion: '1.2' }
+
+	if ( 'get' === method ) {
+		this.wpcom.req.get( path , params, fn );
+	} else if ( 'post' === method ) {
+		this.wpcom.req.post( path, params, data, fn )
+	}
 };
 
 Undocumented.prototype._sendRequestWithLocale = function( originalParams, fn ) {
