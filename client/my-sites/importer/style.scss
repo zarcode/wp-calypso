@@ -27,11 +27,8 @@
 	$noticon-size: 40px;
 	width: 50px;
 	height: 45px;
-	padding-bottom: 5px;
-
-	position: absolute;
-		left: 20px;
-		top: 20px;
+	float: left;
+	margin-right: 16px;
 
 	background-color: $gray-dark;
 	stroke: $white;
