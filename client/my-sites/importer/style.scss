@@ -24,9 +24,8 @@
 }
 
 .importer__service-icon {
-	$noticon-size: 40px;
-	width: 50px;
-	height: 45px;
+	width: 56px;
+	height: 56px;
 	float: left;
 	margin-right: 16px;
 
@@ -36,6 +35,11 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	
+	@include breakpoint( "<960px" ) {
+		width: 48px;
+		height: 48px;
+	}
 
 	&.is-wordpress {
 		background-color: $blue-wordpress;
@@ -46,6 +50,12 @@
 	padding-top: 70px;
 .importer__service-icon .social-logo {
 	fill: white;
+	
+	@include breakpoint( "<960px" ) {
+		width: 36px;
+		height: 36px;
+	}
+}
 
 	@include breakpoint(">480px") {
 		padding-top: inherit;
