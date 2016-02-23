@@ -36,7 +36,6 @@
 	background-color: $gray-dark;
 	stroke: $white;
 	stroke-width: 0.1;
-	fill: $white;
 	border-radius: 4px;
 	
 	display: flex;
@@ -50,6 +49,8 @@
 
 .importer__service-info {
 	padding-top: 70px;
+.importer__service-icon .social-logo {
+	fill: white;
 
 	@include breakpoint(">480px") {
 		padding-top: inherit;
