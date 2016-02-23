@@ -46,8 +46,6 @@
 	}
 }
 
-.importer__service-info {
-	padding-top: 70px;
 .importer__service-icon .social-logo {
 	fill: white;
 	
@@ -57,9 +55,9 @@
 	}
 }
 
-	@include breakpoint(">480px") {
-		padding-top: inherit;
-		margin-left: 60px;
+.importer__service-info {	
+	@include breakpoint("<480px") {
+		padding-top: 60px;
 	}
 }
 
