@@ -38,6 +38,9 @@
 	stroke-width: 0.1;
 	fill: $white;
 	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	&.is-wordpress {
 		background-color: $blue-wordpress;
