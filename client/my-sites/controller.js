@@ -25,22 +25,27 @@ var user = require( 'lib/user' )(),
 /**
  * The main navigation of My Sites consists of a component with
  * the site selector list and the sidebar section items
+ * @param { object } context - Middleware context
+ * @returns { object } React element containing the site selector and sidebar
  */
-function renderNavigation( context, allSitesPath, siteBasePath ) {
+function createNavigation( context ) {
+	var basePath = context.pathname,
+		siteFragment = route.getSiteFragment( context.pathname );
+
+	if ( siteFragment ) {
+		basePath = route.sectionify( context.pathname );
+	}
+
 	context.store.dispatch( uiActions.setSection( 'sites' ) );
 
-	// Render the My Sites navigation in #secondary
-	ReactDom.render(
-		React.createElement( NavigationComponent, {
-			layoutFocus: layoutFocus,
-			path: context.path,
-			allSitesPath: allSitesPath,
-			siteBasePath: siteBasePath,
-			user: user,
-			sites: sites
-		} ),
-		document.getElementById( 'secondary' )
-	);
+	return React.createElement( NavigationComponent, {
+		layoutFocus: layoutFocus,
+		path: context.path,
+		allSitesPath: basePath,
+		siteBasePath: basePath,
+		user: user,
+		sites: sites
+	} );
 }
 
 function removeSidebar( context ) {
@@ -220,15 +225,17 @@ module.exports = {
 		checkSiteShouldFetch();
 	},
 
+	makeNavigation: function( context, next ) {
+		context.secondary = createNavigation( context );
+		next();
+	},
+
 	navigation: function( context, next ) {
-		var basePath = context.pathname,
-			siteFragment = route.getSiteFragment( context.pathname );
-
-		if ( siteFragment ) {
-			basePath = route.sectionify( context.pathname );
-		}
-
-		renderNavigation( context, basePath, basePath );
+		// Render the My Sites navigation in #secondary
+		ReactDom.render(
+			createNavigation( context ),
+			document.getElementById( 'secondary' )
+		);
 		next();
 	},
 
