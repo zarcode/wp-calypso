@@ -68,6 +68,7 @@ inputPaths = inputFiles.map( function( fileName ) {
 
 inputPaths.forEach( function( inputFile ) {
 	if ( ! fs.existsSync( inputFile ) ) {
+		process.exitCode = 1;
 		return console.log( 'Error: inputFile, `' + inputFiles + '`, does not exist' );
 	}
 } );
