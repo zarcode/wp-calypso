@@ -14,6 +14,16 @@ export default React.createClass( {
 		isPlaceholder: React.PropTypes.bool
 	},
 
+	shouldComponentUpdate: function(nextProps ) {
+		if ( this.props.isPlaceholder !== nextProps.isPlaceholder ) {
+			return true;
+		}
+		if ( this.props.image !== nextProps.image ) {
+			return true;
+		}
+		return false;
+	},
+
 	render() {
 		const className = classNames( {
 				'plugin-icon': true,
