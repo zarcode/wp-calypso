@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce';
 import { findDOMNode } from 'react-dom';
 import classNames from 'classnames';
 import analytics from 'analytics';
+import isEqual from 'lodash/isEqual';
 
 /**
  * Internal dependencies
@@ -25,6 +26,19 @@ let _actionBarVisible = true;
 // If the Action
 const MAX_ACTIONBAR_HEIGHT = 50;
 const MIN_ACTIONBAR_WIDTH = 600;
+
+function checkPropsChange( nextProps, propArr ) {
+	var i, prop;
+
+	for ( i = 0; i < propArr.length; i++ ) {
+		prop = propArr[ i ];
+
+		if ( nextProps[ prop ] !== this.props[ prop ] ) {
+			return true;
+		}
+	}
+	return false;
+}
 
 export default React.createClass( {
 	displayName: 'Plugins-list-header',
@@ -47,7 +61,7 @@ export default React.createClass( {
 		haveActiveSelected: React.PropTypes.bool,
 		haveInactiveSelected: React.PropTypes.bool,
 		bulkManagement: React.PropTypes.bool,
-		sites: React.PropTypes.object.isRequired,
+		selectedSiteSlug: React.PropTypes.string,
 		plugins: React.PropTypes.array.isRequired,
 		selected: React.PropTypes.array.isRequired
 	},
@@ -57,6 +71,35 @@ export default React.createClass( {
 			actionBarVisible: _actionBarVisible,
 			addPluginTooltip: false
 		};
+	},
+
+	shouldComponentUpdate: function( nextProps, nextState ) {
+		var propsToCheck = [ 'label', 'isBulkManagementActive', 'haveUpdatesSelected', 'pluginUpdateCount', 'haveActiveSelected', 'haveInactiveSelected', 'bulkManagement' ];
+		if ( checkPropsChange.call( this, nextProps, propsToCheck ) ) {
+			return true;
+		}
+
+		if ( this.props.plugins.length !== nextProps.plugins.length ){
+			return true;
+		}
+
+		if ( ! isEqual( this.props.sites, nextProps.sites ) ) {
+			return true;
+		}
+
+		if ( this.props.selected.length !== nextProps.selected.length ) {
+			return true;
+		}
+
+		if ( this.state.actionBarVisible !== nextState.actionBarVisible ) {
+			return true;
+		}
+
+		if ( this.state.addPluginTooltip !== nextState.addPluginTooltip ) {
+			return true;
+		}
+
+		return false;
 	},
 
 	componentDidMount() {
@@ -106,6 +149,10 @@ export default React.createClass( {
 		analytics.ga.recordEvent( 'Plugins', someSelected ? 'Clicked to Uncheck All Plugins' : 'Clicked to Check All Plugins' );
 	},
 
+	tigglePluginTooltip( toggle ) {
+		this.setState( { addPluginTooltip: toggle } )
+	},
+
 	renderCurrentActionButtons() {
 		const isJetpackSelected = this.props.selected.some( plugin => 'jetpack' === plugin.slug ),
 			needsRemoveButton = this.props.selected.length && this.canUpdatePlugins() && ! isJetpackSelected,
@@ -132,8 +179,8 @@ export default React.createClass( {
 					</Button>
 				</ButtonGroup>
 			);
-			const selectedSite = this.props.sites.getSelectedSite();
-			const browserUrl = '/plugins/browse' + ( selectedSite ? '/' + selectedSite.slug : '' );
+
+			const browserUrl = '/plugins/browse' + ( this.props.selectedSiteSlug ? '/' + this.props.selectedSiteSlug : '' );
 
 			rightSideButtons.push(
 				<ButtonGroup key="plugin-list-header__buttons-browser">
@@ -142,8 +189,8 @@ export default React.createClass( {
 						href={ browserUrl }
 						onClick={ this.onBrowserLinkClick }
 						className="plugin-list-header__browser-button"
-						onMouseEnter={ () => this.setState( { addPluginTooltip: true } ) }
-						onMouseLeave={ () => this.setState( { addPluginTooltip: false } ) }
+						onMouseEnter={ this.tigglePluginTooltip.bind( this, true ) }
+						onMouseLeave={ this.tigglePluginTooltip.bind( this, false ) }
 						ref="addPluginButton"
 						aria-label={ this.translate( 'Browse all plugins', { context: 'button label' } ) }>
 						<Gridicon key="plus-icon" icon="plus-small" size={ 12 } /><Gridicon key="plugins-icon" icon="plugins" size={ 18 } />
