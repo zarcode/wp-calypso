@@ -14,7 +14,7 @@ export default React.createClass( {
 		isPlaceholder: React.PropTypes.bool
 	},
 
-	shouldComponentUpdate: function(nextProps ) {
+	shouldComponentUpdate: function( nextProps ) {
 		if ( this.props.isPlaceholder !== nextProps.isPlaceholder ) {
 			return true;
 		}
