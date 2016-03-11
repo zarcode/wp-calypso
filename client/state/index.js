@@ -23,7 +23,7 @@ import currentUser from './current-user/reducer';
 import ui from './ui/reducer';
 import comments from './comments/reducer';
 import googleAppsUsers from './google-apps-users/reducer';
-import offlineQueue from './offlineActionQueue/middleware';
+import offlineQueue from './connectionMiddleware/middleware';
 import connectionMiddleware from './connectionMiddleware/middleware';
 import connectionMiddlewareReducer from './connectionMiddleware/reducer';
 
