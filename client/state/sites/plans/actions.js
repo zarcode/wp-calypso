@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import debugFactory from 'debug';
 import map from 'lodash/map';
 import reject from 'lodash/reject';
 
@@ -62,7 +61,7 @@ export function fetchSitePlans( siteId ) {
 		siteId
 	}
 }
-registerConnection( SITE_PLANS_FETCH, connectFetchSitePlans, { offlineQueue: true, squash: true } );
+registerConnection( SITE_PLANS_FETCH, connectFetchSitePlans, { offlineQueue: false } );
 
 /**
  * Returns an action object to be used in signalling that an object containing
