@@ -26,7 +26,8 @@ const abtest = require( 'lib/abtest' ).abtest,
 	hideReaderFullPost = require( 'state/ui/reader/fullpost/actions' ).hideReaderFullPost,
 	FeedSubscriptionActions = require( 'lib/reader-feed-subscriptions/actions' ),
 	readerRoute = require( 'reader/route' ),
-	stats = require( 'reader/stats' );
+	stats = require( 'reader/stats' ),
+	FeedError = require( 'reader/feed-error' );
 
 import userSettings from 'lib/user-settings';
 
@@ -77,6 +78,13 @@ pageNotifier( function removeFullPostOnLeave( newContext, oldContext ) {
 
 function removeFullPostDialog() {
 	ReactDom.unmountComponentAtNode( document.getElementById( 'tertiary' ) );
+}
+
+function renderPostNotFound() {
+	ReactDom.render(
+		<FeedError />,
+		document.getElementById( 'primary' )
+	);
 }
 
 function userHasHistory( context ) {
@@ -306,7 +314,8 @@ module.exports = {
 					onClose: function() {
 						page.back( context.lastRoute || '/' );
 					},
-					onClosed: removeFullPostDialog
+					onClosed: removeFullPostDialog,
+					onPostNotFound: renderPostNotFound
 				} )
 			),
 			document.getElementById( 'tertiary' )
@@ -344,7 +353,8 @@ module.exports = {
 					onClose: function() {
 						page.back( context.lastRoute || '/' );
 					},
-					onClosed: removeFullPostDialog
+					onClosed: removeFullPostDialog,
+					onPostNotFound: renderPostNotFound
 				} )
 			),
 			document.getElementById( 'tertiary' )
