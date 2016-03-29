@@ -88,6 +88,7 @@
 		"me/trophies": false,
 		"muse": true,
 		"monthly-plan-pricing": true,
+		"native-customizer": true,
 		"network-connection": true,
 		"notifications2beta": true,
 		"olark": true,
