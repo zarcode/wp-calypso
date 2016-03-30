@@ -198,6 +198,10 @@ function receivePostFromPage( newPost ) {
 }
 
 function receivePost( feedId, postId, post ) {
+	if ( ! post ) {
+		return;
+	}
+
 	if ( post.errors || post.status_code === 404 ) {
 		receiveError( feedId, postId, post );
 	} else {
@@ -206,6 +210,10 @@ function receivePost( feedId, postId, post ) {
 }
 
 function receiveBlogPost( blogId, postId, post ) {
+	if ( ! post ) {
+		return;
+	}
+
 	if ( post.errors || post.status_code === 404 ) {
 		post.site_ID = blogId;
 		post.ID = postId;
