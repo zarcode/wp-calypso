@@ -4,6 +4,7 @@
 var ReactDom = require( 'react-dom' ),
 	React = require( 'react' ),
 	page = require( 'page' );
+import { Provider as ReduxProvider } from 'react-redux';
 
 /**
  * Internal Dependencies
@@ -67,14 +68,16 @@ module.exports = {
 		}
 
 		ReactDom.render(
-			<SitePurchasesData>
-				<SiteSettingsComponent
-					context={ context }
-					sites={ sites }
-					subsection={ context.params.subsection }
-					section={ context.params.section }
-					path={ context.path } />
-			</SitePurchasesData>,
+			<ReduxProvider store={ context.store }>
+				<SitePurchasesData>
+					<SiteSettingsComponent
+						context={ context }
+						sites={ sites }
+						subsection={ context.params.subsection }
+						section={ context.params.section }
+						path={ context.path } />
+				</SitePurchasesData>
+			</ReduxProvider>,
 			document.getElementById( 'primary' )
 		);
 
