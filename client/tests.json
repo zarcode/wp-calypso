@@ -463,6 +463,9 @@
 		"editor-ground-control": {
 			"test": [ "index" ]
 		},
+		"editor-publish-button": {
+			"test": [ "index" ]
+		},
 		"editor-sharing": {
 			"test": [ "publicize-connection" ]
 		},
