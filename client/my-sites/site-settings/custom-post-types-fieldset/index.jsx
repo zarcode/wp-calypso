@@ -86,9 +86,9 @@ class CustomPostTypesFieldset extends Component {
 				{ siteId && (
 					<QueryPostTypes siteId={ siteId } />
 				) }
-				<FormLabel>{ translate( 'Custom Post Types' ) }</FormLabel>
+				<FormLabel>{ translate( 'Custom Content Types' ) }</FormLabel>
 				<p>
-					{ translate( 'Display different types of content on your site with {{link}}custom post types{{/link}}.', {
+					{ translate( 'Display different types of content on your site with {{link}}custom content types{{/link}}.', {
 						components: {
 							link: <a href="https://jetpack.com/support/custom-content-types/" target="_blank" />
 						}
