@@ -77,8 +77,8 @@ class CustomPostTypesFieldset extends Component {
 
 	render() {
 		const {
-			translate, siteId, requestingPostTypes, requestingSettings,
-			value, recordEvent, className
+			translate, siteId, requestingPostTypes, requestingSettings, value,
+			recordEvent, className
 		} = this.props;
 
 		return (
@@ -128,8 +128,9 @@ CustomPostTypesFieldset.propTypes = {
 	siteId: PropTypes.number,
 	requestingPostTypes: PropTypes.bool,
 	requestingSettings: PropTypes.bool,
-	settings: PropTypes.object,
+	value: PropTypes.object,
 	recordEvent: PropTypes.func,
+	className: PropTypes.string
 };
 
 export default connect( ( state ) => {
