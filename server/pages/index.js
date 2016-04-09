@@ -92,26 +92,6 @@ function generateStaticUrls( request ) {
 	return urls;
 }
 
-function getChunk( path ) {
-	var regex, chunkPath;
-
-	for ( chunkPath in chunksByPath ) {
-		if ( chunkPath === path ) {
-			return chunksByPath[ chunkPath ];
-		}
-
-		if ( chunkPath === '/' ) {
-			continue;
-		}
-
-		regex = utils.pathToRegExp( chunkPath );
-
-		if ( regex.test( path ) ) {
-			return chunksByPath[ chunkPath ];
-		}
-	}
-}
-
 function getCurrentBranchName() {
 	try {
 		return execSync( 'git rev-parse --abbrev-ref HEAD' ).toString().replace( /\s/gm, '' );
@@ -129,9 +109,7 @@ function getCurrentCommitShortChecksum() {
 }
 
 function getDefaultContext( request ) {
-	var context, chunk;
-
-	context = {
+	var context = Object.assign( {}, request.context, {
 		compileDebug: config( 'env' ) === 'development' ? true : false,
 		urls: generateStaticUrls( request ),
 		user: false,
@@ -146,7 +124,7 @@ function getDefaultContext( request ) {
 		isFluidWidth: !! config.isEnabled( 'fluid-width' ),
 		devDocsURL: '/devdocs',
 		catchJsErrors: '/calypso/catch-js-errors-' + 'v2' + '.min.js'
-	};
+	} );
 
 	context.app = {
 		// use ipv4 address when is ipv4 mapped address
@@ -182,14 +160,6 @@ function getDefaultContext( request ) {
 		context.faviconURL = '/calypso/images/favicons/favicon-development.ico';
 		context.branchName = getCurrentBranchName();
 		context.commitChecksum = getCurrentCommitShortChecksum();
-	}
-
-	if ( config.isEnabled( 'code-splitting' ) ) {
-		chunk = getChunk( request.path );
-
-		if ( chunk ) {
-			context.chunk = chunk;
-		}
 	}
 
 	return context;
@@ -398,6 +368,13 @@ module.exports = function() {
 		.forEach( section => {
 			section.paths.forEach( path => {
 				const pathRegex = utils.pathToRegExp( path );
+
+				app.get( pathRegex, function( req, res, next ) {
+					if ( config.isEnabled( 'code-splitting' ) ) {
+						req.context = Object.assign( {}, req.context, { chunk: section.name } );
+					}
+					next();
+				} );
 
 				if ( ! section.isomorphic ) {
 					app.get( pathRegex, setUpLoggedInRoute, serverRender );
