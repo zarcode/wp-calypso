@@ -151,6 +151,18 @@ const olark = {
 		}
 	},
 
+	fetchOlarkConfigUpdate() {
+		this.getOlarkConfiguration()
+			.then( ( configuration ) => this.updateOlarkGroupAndEligibility( configuration ) )
+			.catch( ( error ) => this.handleError( error ) );
+	},
+
+	updateOlarkGroupAndEligibility( wpcomOlarkConfig = {} ) {
+		const isUserEligible = ( 'undefined' === typeof wpcomOlarkConfig.isUserEligible ) ? true : wpcomOlarkConfig.isUserEligible;
+		olarkApi( 'api.chat.setOperatorGroup', { group: wpcomOlarkConfig.group } );
+		olarkActions.setUserEligibility( isUserEligible );
+	},
+
 	syncStoreWithExpandedState() {
 		// We query the dom here because there is no other 100% accurate way to figure this out. Olark does not
 		// provide initial events for api.box.onExpand when the api.box.show event is fired.
@@ -413,3 +425,4 @@ const olark = {
 
 emitter( olark );
 olark.initialize();
+module.exports = olark;
