@@ -2,6 +2,7 @@
  * External dependencies
  */
 import React from 'react';
+import classnames from 'classnames';
 import omit from 'lodash/omit';
 import noop from 'lodash/noop';
 
@@ -90,27 +91,30 @@ export default React.createClass( {
 	},
 
 	render() {
-		let children, imageProps;
+		let children, imageProps, modifierClass;
 
 		switch ( this.state.status ) {
 			case LoadStatus.LOADING:
 				children = this.props.placeholder;
+				modifierClass = 'is-loading';
 				break;
 
 			case LoadStatus.LOADED:
 				imageProps = omit( this.props, Object.keys( this.constructor.propTypes ) );
 				children = <img src={ this.props.src } { ...imageProps } />;
+				modifierClass = 'is-loaded';
 				break;
 
 			case LoadStatus.FAILED:
 				children = this.props.children;
+				modifierClass = 'is-failed';
 				break;
-
-			default: break;
 		}
 
+		const classes = classnames( 'image-preloader', modifierClass );
+
 		return (
-			<div className="image-preloader">
+			<div className={ classes }>
 				{ children }
 			</div>
 		);
