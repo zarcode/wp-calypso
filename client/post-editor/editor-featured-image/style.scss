@@ -13,12 +13,16 @@
 	z-index: z-index( 'root', '.editor-featured-image__preview.is-transient::after' );
 }
 
-.editor-featured-image__preview .spinner {
+.editor-featured-image__preview-spinner {
 	display: none;
+
+	.editor-featured-image__preview.is-transient & {
+		display: block;
+	}
 }
 
-.editor-featured-image__preview.is-transient .spinner {
-	display: block;
+.editor-featured-image__preview .image-preloader {
+	height: 100%;
 }
 
 .editor-featured-image__preview .spinner,
