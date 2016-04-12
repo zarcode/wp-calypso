@@ -20,7 +20,7 @@ export default React.createClass( {
 	displayName: 'ImagePreloader',
 
 	propTypes: {
-		src: React.PropTypes.string.isRequired,
+		src: React.PropTypes.string,
 		placeholder: React.PropTypes.element.isRequired,
 		children: React.PropTypes.node,
 		onLoad: React.PropTypes.func,
@@ -51,15 +51,18 @@ export default React.createClass( {
 		const src = ( nextProps || this.props ).src;
 
 		this.destroyLoader();
+		this.setState( {
+			status: LoadStatus.LOADING
+		} );
+
+		if ( ! src ) {
+			return;
+		}
 
 		this.image = new Image();
 		this.image.src = src;
 		this.image.onload = this.onLoadComplete;
 		this.image.onerror = this.onLoadComplete;
-
-		this.setState( {
-			status: LoadStatus.LOADING
-		} );
 	},
 
 	destroyLoader() {
