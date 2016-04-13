@@ -42,7 +42,7 @@ export default React.createClass( {
 		return (
 			<div className={ classes }>
 				<Spinner />
-				<img src={ src } />
+				<img src={ src } className="editor-featured-image__preview-image" />
 			</div>
 		);
 	}

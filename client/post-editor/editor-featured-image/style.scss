@@ -4,8 +4,17 @@
 	padding: 0;
 }
 
-.editor-featured-image__preview {
+.editor-featured-image__current-image {
 	position: relative;
+	display: inline-block;
+	vertical-align: top;
+
+	.button.is-borderless & .gridicon {
+		position: absolute;
+			top: auto;
+			bottom: 8px;
+			right: 8px;
+	}
 }
 
 .editor-featured-image__preview.is-transient::after {
@@ -43,3 +52,6 @@
 	fill: transparent;
 }
 
+.editor-featured-image__preview-image {
+	display: block;
+}
