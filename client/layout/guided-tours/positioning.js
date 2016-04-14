@@ -132,3 +132,35 @@ function scrollIntoView( target ) {
 	scrollTo( { y, container } );
 	return y;
 }
+
+export function getOverlayStyle( { rect } ) {
+	const clientWidth = document.documentElement.clientWidth;
+	const clientHeight = document.documentElement.clientHeight;
+
+	return {
+		top: {
+			top: '0px',
+			left: '0px',
+			right: '0px',
+			height: rect.top + 'px',
+		},
+		left: {
+			top: rect.top + 'px',
+			left: '0px',
+			width: rect.left + 'px',
+			height: rect.height + 'px',
+		},
+		right: {
+			top: rect.top + 'px',
+			right: '0px',
+			height: rect.height + 'px',
+			width: ( clientWidth - rect.right ) + 'px',
+		},
+		bottom: {
+			bottom: '0px',
+			height: ( clientHeight - rect.bottom ) + 'px',
+			left: '0px',
+			right: '0px',
+		},
+	};
+}

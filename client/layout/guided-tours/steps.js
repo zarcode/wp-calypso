@@ -11,22 +11,25 @@ import Card from 'components/card';
 import Button from 'components/button';
 import ExternalLink from 'components/external-link';
 import Gridicon from 'components/gridicon';
-import { posToCss, getStepPosition, getBullseyePosition, targetForSlug } from './positioning';
+import { posToCss, bullseyePositioners, getStepPosition, getOverlayStyle, targetForSlug } from './positioning';
 
 class GuidesBasicStep extends Component {
 	render() {
 		const stepPos = getStepPosition( this.props );
 		const stepCoords = posToCss( stepPos );
 
-		const { text, onNext, onQuit } = this.props;
+		const { target, text, onNext, onQuit } = this.props;
 		return (
-			<Card className="guidestours__step" style={ stepCoords } >
-				<p>{ text }</p>
-				<div className="guidestours__choice-button-row">
-					<Button onClick={ onNext } primary>{ this.props.translate( 'Continue' ) }</Button>
-					<Button onClick={ onQuit } borderless>{ this.props.translate( 'Do this later.' ) }</Button>
-				</div>
-			</Card>
+			<div>
+				<GuidesOverlay target={ target } />
+				<Card className="guidestours__step" style={ stepCoords } >
+					<p>{ text }</p>
+					<div className="guidestours__choice-button-row">
+						<Button onClick={ onNext } primary>{ this.props.translate( 'Continue' ) }</Button>
+						<Button onClick={ onQuit } borderless>{ this.props.translate( 'Do this later.' ) }</Button>
+					</div>
+				</Card>
+			</div>
 		);
 	}
 }
@@ -118,7 +121,6 @@ class GuidesActionStep extends Component {
 		if ( onNext && target.addEventListener ) {
 			target.addEventListener( 'click', onNext );
 		}
-		target && target.classList.add( 'guidestours__overlay' );
 	}
 
 	removeTargetListener() {
@@ -128,7 +130,6 @@ class GuidesActionStep extends Component {
 		if ( onNext && target.removeEventListener ) {
 			target.removeEventListener( 'click', onNext );
 		}
-		target && target.classList.remove( 'guidestours__overlay' );
 	}
 
 	render() {
@@ -137,22 +138,25 @@ class GuidesActionStep extends Component {
 		const stepCoords = posToCss( stepPos );
 		const pointerCoords = posToCss( bullseyePos );
 
-		const { text } = this.props;
+		const { target, text } = this.props;
 
 		return (
-			<Card className="guidestours__step" style={ stepCoords } >
-				<p>{ text }</p>
-				<div className="guidestours__bullseye-instructions">
-					<p>
-						{ this.props.translate( 'Click the {{gridicon/}} to continue…', {
-							components: {
-								gridicon: <Gridicon icon={ this.props.icon } size={ 24 } />
-							}
-						} ) }
-					</p>
-				</div>
-				<GuidesPointer style={ pointerCoords } />
-			</Card>
+			<div>
+				<GuidesOverlay target={ target } />
+				<Card className="guidestours__step" style={ stepCoords } >
+					<p>{ text }</p>
+					<div className="guidestours__bullseye-instructions">
+						<p>
+							{ this.props.translate( 'Click the {{gridicon/}} to continue…', {
+								components: {
+									gridicon: <Gridicon icon={ this.props.icon } size={ 24 } />
+								}
+							} ) }
+						</p>
+					</div>
+					<GuidesPointer style={ pointerCoords } />
+				</Card>
+			</div>
 		);
 	}
 }
@@ -237,6 +241,32 @@ class GuidesPointer extends Component {
 
 GuidesPointer.propTypes = {
 	style: PropTypes.object.isRequired,
+};
+
+class GuidesOverlay extends Component {
+	render() {
+		const { target } = this.props;
+
+		if ( !target ) {
+			return;
+		}
+
+		const rect = target.getBoundingClientRect();
+		const overlayStyle = getOverlayStyle( { rect: rect } );
+
+		return (
+			<div className="guidestours__overlay-container">
+				<div className="guidestours__overlay" style={ overlayStyle.top } />
+				<div className="guidestours__overlay" style={ overlayStyle.left } />
+				<div className="guidestours__overlay" style={ overlayStyle.right } />
+				<div className="guidestours__overlay" style={ overlayStyle.bottom } />
+			</div>
+		);
+	}
+}
+
+GuidesOverlay.propTypes = {
+	target: PropTypes.instanceOf( HTMLElement ),
 };
 
 export default {
