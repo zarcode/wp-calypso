@@ -27,15 +27,7 @@ var staticFiles = [
 	{ path: 'style-rtl.css' }
 ];
 
-var chunksByPath = {};
-
 var sections = sectionsModule.get();
-
-sections.forEach( function( section ) {
-	section.paths.forEach( function( path ) {
-		chunksByPath[ path ] = section.name;
-	} );
-} );
 
 /**
  * Generates a hash of a files contents to be used as a version parameter on asset requests.
