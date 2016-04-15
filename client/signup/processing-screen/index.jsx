@@ -58,7 +58,11 @@ module.exports = React.createClass( {
 	},
 
 	render: function() {
-		var stepMarkup = map( sortSteps( this.props.steps ), this.showStep );
+		var stepMarkup = map( [
+			{ processingMessage: 'FOO', status: 'pending' },
+			{ processingMessage: 'BAR', status: 'processing' },
+			{ processingMessage: 'BAZ', status: 'completed' }
+		], this.showStep );
 
 		return (
 			<div>

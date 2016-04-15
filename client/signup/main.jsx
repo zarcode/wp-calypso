@@ -306,7 +306,7 @@ const Signup = React.createClass( {
 			<div className="signup__step" key={ stepKey }>
 				{ this.localeSuggestions() }
 				{
-					this.state.loadingScreenStartTime ?
+					true ?
 					<SignupProcessingScreen steps={ this.state.progress } /> :
 					<CurrentComponent
 						path={ this.props.path }
