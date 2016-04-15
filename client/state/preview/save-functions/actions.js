@@ -46,11 +46,19 @@ export function setHomePageSettings( site, isPageOnFront, pageOnFrontId, pageFor
 }
 
 export function removeSiteLogo( site ) {
-	debug( 'removing logo image' );
-	// TODO: we need an endpoint for this
+	return function() {
+		debug( 'removing logo image' );
+		wpcom.undocumented().site( site ).removeLogo( function( error, data ) {
+			debug( 'removing logo image complete', error, data );
+		} );
+	}
 }
 
 export function setSiteLogo( site, logoPostId, logoUrl ) {
-	debug( 'setting logo image', logoPostId, logoUrl );
-	// TODO: we need an endpoint for this
+	return function() {
+		debug( 'setting logo image', logoPostId, logoUrl );
+		wpcom.undocumented().site( site ).setLogo( { id: logoPostId, url: logoUrl }, function( error, data ) {
+			debug( 'setting logo image complete', error, data );
+		} );
+	}
 }
