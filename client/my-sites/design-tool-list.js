@@ -9,9 +9,9 @@ import React from 'react';
 import Gridicon from 'components/gridicon';
 
 const ControlButton = props => (
-	<div onClick={ props.onClick } className="design-menu-controls__control-button">
-		<span className="design-menu-controls__control-button__title">{ props.title }</span>
-		<Gridicon icon="chevron-right" size={ 24 } className="design-menu-controls__control-button__arrow" />
+	<div onClick={ props.onClick } className="design-tool-list__button">
+		<span className="design-tool-list__button__title">{ props.title }</span>
+		<Gridicon icon="chevron-right" size={ 24 } className="design-tool-list__button__arrow" />
 	</div>
 );
 
@@ -35,7 +35,7 @@ const DesignToolList = React.createClass( {
 
 	render() {
 		return (
-			<div className="design-menu-controls__control-list">
+			<div className="design-tool-list">
 				{ this.renderAllControls() }
 			</div>
 		);
