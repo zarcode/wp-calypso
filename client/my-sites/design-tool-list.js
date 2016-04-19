@@ -18,14 +18,6 @@ const ControlButton = props => (
 const DesignToolList = React.createClass( {
 	propTypes: {
 		onChange: React.PropTypes.func.isRequired,
-		tools: React.PropTypes.arrayOf( React.PropTypes.shape( {
-			value: React.PropTypes.string.isRequired,
-			label: React.PropTypes.string.isRequired,
-		} ) ),
-	},
-
-	renderAllControls() {
-		return this.props.tools.map( this.renderControl );
 	},
 
 	renderControl( tool ) {
@@ -36,7 +28,16 @@ const DesignToolList = React.createClass( {
 	render() {
 		return (
 			<div className="design-tool-list">
-				{ this.renderAllControls() }
+				<div className="design-tool-list__header">{ this.translate( 'Site Identity' ) }</div>
+				<div className="design-tool-list__section">
+					{ this.renderControl( { label: this.translate( 'Logo' ), value: 'siteLogo' } ) }
+					{ this.renderControl( { label: this.translate( 'Title and Tagline' ), value: 'siteTitle' } ) }
+				</div>
+				<div className="design-tool-list__header">{ this.translate( 'Site Layout' ) }</div>
+				<div className="design-tool-list__section">
+					{ this.renderControl( { label: this.translate( 'Homepage Settings' ), value: 'homePage' } ) }
+					{ this.renderControl( { label: this.translate( 'Header Image' ), value: 'headerImage' } ) }
+				</div>
 			</div>
 		);
 	}

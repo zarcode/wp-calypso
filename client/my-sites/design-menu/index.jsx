@@ -61,27 +61,6 @@ const DesignMenu = React.createClass( {
 		this.props.actions.fetchPreviewMarkup( this.props.selectedSite.ID, '' );
 	},
 
-	getDesignTools() {
-		return [
-			{
-				label: this.translate( 'Site Title and Tagline' ),
-				value: 'siteTitle',
-			},
-			{
-				label: this.translate( 'Header Image' ),
-				value: 'headerImage',
-			},
-			{
-				label: this.translate( 'Site Logo' ),
-				value: 'siteLogo',
-			},
-			{
-				label: this.translate( 'Homepage Settings' ),
-				value: 'homePage',
-			},
-		];
-	},
-
 	activateDesignTool( id ) {
 		const activeDesignTool = designToolsById[ id ];
 		this.setState( { activeDesignTool, activePreviewDataKey: id } );
@@ -127,7 +106,7 @@ const DesignMenu = React.createClass( {
 
 	renderDesignTool() {
 		if ( ! this.state.activeDesignTool ) {
-			return <DesignToolList tools={ this.getDesignTools() } onChange={ this.activateDesignTool } />;
+			return <DesignToolList onChange={ this.activateDesignTool } />;
 		}
 		return (
 			<DesignToolData previewDataKey={ this.state.activePreviewDataKey } >
