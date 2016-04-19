@@ -69,6 +69,7 @@ export default React.createClass( {
 					{ isExternalLink ? <span className="noticon noticon-external" /> : null }
 				</a>
 				{ this.renderButton( this.props.buttonLink ) }
+				{ this.props.children }
 			</li>
 		);
 	}
