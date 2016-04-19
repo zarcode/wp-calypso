@@ -6,14 +6,9 @@ import React from 'react';
 /**
  * Internal dependencies
  */
-import Gridicon from 'components/gridicon';
-
-const ControlButton = props => (
-	<div onClick={ props.onClick } className="design-tool-list__button">
-		<span className="design-tool-list__button__title">{ props.title }</span>
-		<Gridicon icon="chevron-right" size={ 24 } className="design-tool-list__button__arrow" />
-	</div>
-);
+import SidebarHeading from 'layout/sidebar/heading';
+import SidebarMenu from 'layout/sidebar/menu';
+import SidebarItem from 'layout/sidebar/item';
 
 const DesignToolList = React.createClass( {
 	propTypes: {
@@ -21,23 +16,36 @@ const DesignToolList = React.createClass( {
 	},
 
 	renderControl( tool ) {
-		const onChange = () => this.props.onChange( tool.value )
-		return <ControlButton key={ tool.value } title={ tool.label } onClick={ onChange } />;
+		const onChange = event => {
+			event.preventDefault();
+			this.props.onChange( tool.value );
+		}
+		return <SidebarItem
+							className="design-tool-list__button"
+							icon={ tool.icon }
+							label={ tool.label }
+							link="/customize"
+							onNavigate={ onChange }
+						/>;
 	},
 
 	render() {
 		return (
 			<div className="design-tool-list">
-				<div className="design-tool-list__header">{ this.translate( 'Site Identity' ) }</div>
-				<div className="design-tool-list__section">
-					{ this.renderControl( { label: this.translate( 'Logo' ), value: 'siteLogo' } ) }
-					{ this.renderControl( { label: this.translate( 'Title and Tagline' ), value: 'siteTitle' } ) }
-				</div>
-				<div className="design-tool-list__header">{ this.translate( 'Site Layout' ) }</div>
-				<div className="design-tool-list__section">
-					{ this.renderControl( { label: this.translate( 'Homepage Settings' ), value: 'homePage' } ) }
-					{ this.renderControl( { label: this.translate( 'Header Image' ), value: 'headerImage' } ) }
-				</div>
+				<SidebarHeading>{ this.translate( 'Site Identity' ) }</SidebarHeading>
+				<SidebarMenu>
+					<ul>
+						{ this.renderControl( { icon: 'image', label: this.translate( 'Logo' ), value: 'siteLogo' } ) }
+						{ this.renderControl( { icon: 'heading', label: this.translate( 'Title and Tagline' ), value: 'siteTitle' } ) }
+					</ul>
+				</SidebarMenu>
+				<SidebarHeading>{ this.translate( 'Site Layout' ) }</SidebarHeading>
+				<SidebarMenu>
+					<ul>
+						{ this.renderControl( { icon: 'house', label: this.translate( 'Homepage Settings' ), value: 'homePage' } ) }
+						{ this.renderControl( { icon: 'image', label: this.translate( 'Header Image' ), value: 'headerImage' } ) }
+					</ul>
+				</SidebarMenu>
 			</div>
 		);
 	}
