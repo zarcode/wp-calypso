@@ -6,6 +6,7 @@ import React from 'react';
 /**
  * Internal dependencies
  */
+import Gridicon from 'components/gridicon';
 import SidebarHeading from 'layout/sidebar/heading';
 import SidebarMenu from 'layout/sidebar/menu';
 import SidebarItem from 'layout/sidebar/item';
@@ -20,13 +21,16 @@ const DesignToolList = React.createClass( {
 			event.preventDefault();
 			this.props.onChange( tool.value );
 		}
-		return <SidebarItem
+		return ( <SidebarItem
 							className="design-tool-list__button"
 							icon={ tool.icon }
 							label={ tool.label }
 							link="/customize"
 							onNavigate={ onChange }
-						/>;
+						>
+							<Gridicon icon="chevron-right" size={ 24 } onClick={ onChange } className="design-tool-list__button__icon" />
+						</SidebarItem>
+					);
 	},
 
 	render() {

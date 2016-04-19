@@ -92,3 +92,13 @@ $border-color: #ddd;
 	list-style: none;
 	margin: 0;
 }
+
+.design-tool-list__button {
+	position: relative;
+}
+
+.sidebar__menu .gridicon.design-tool-list__button__icon {
+	cursor: pointer;
+	right: 12px;
+	left: inherit;
+}
