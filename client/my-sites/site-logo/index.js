@@ -39,7 +39,7 @@ const SiteLogoControl = React.createClass( {
 
 	render() {
 		return (
-			<div className="design-menu-controls__control design-menu-controls__header-image-control">
+			<div className="site-logo">
 			<ImageSelector
 			imagePostId={ this.props.logoPostId }
 			onRemove={ this.removeCurrentImage }
