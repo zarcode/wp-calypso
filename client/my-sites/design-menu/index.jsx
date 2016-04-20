@@ -22,13 +22,7 @@ import SiteTitleControl from 'my-sites/site-title';
 import HeaderImageControl from 'my-sites/header-image';
 import HomePageSettings from 'my-sites/home-page-settings';
 import SiteLogoControl from 'my-sites/site-logo';
-
-const designToolsById = {
-	siteTitle: SiteTitleControl,
-	headerImage: HeaderImageControl,
-	homePage: HomePageSettings,
-	siteLogo: SiteLogoControl,
-};
+import DesignMenuPanel from 'my-sites/design-menu-panel';
 
 const DesignMenu = React.createClass( {
 
@@ -50,8 +44,7 @@ const DesignMenu = React.createClass( {
 
 	getInitialState() {
 		return {
-			activeDesignTool: null,
-			activePreviewDataKey: null,
+			activeDesignToolId: null,
 		};
 	},
 
@@ -61,13 +54,12 @@ const DesignMenu = React.createClass( {
 		this.props.actions.fetchPreviewMarkup( this.props.selectedSite.ID, '' );
 	},
 
-	activateDesignTool( id ) {
-		const activeDesignTool = designToolsById[ id ];
-		this.setState( { activeDesignTool, activePreviewDataKey: id } );
+	activateDesignTool( activeDesignToolId ) {
+		this.setState( { activeDesignToolId } );
 	},
 
 	activateDefaultDesignTool() {
-		this.setState( { activeDesignTool: null, activePreviewDataKey: null } );
+		this.setState( { activeDesignToolId: null } );
 	},
 
 	onSave() {
@@ -75,7 +67,7 @@ const DesignMenu = React.createClass( {
 	},
 
 	onBack() {
-		if ( this.state.activeDesignTool ) {
+		if ( this.state.activeDesignToolId ) {
 			return this.activateDefaultDesignTool();
 		}
 		this.maybeCloseDesignMenu();
@@ -101,18 +93,42 @@ const DesignMenu = React.createClass( {
 	},
 
 	renderActiveDesignTool() {
-		return React.createElement( this.state.activeDesignTool );
-	},
-
-	renderDesignTool() {
-		if ( ! this.state.activeDesignTool ) {
-			return <DesignToolList onChange={ this.activateDesignTool } />;
+		switch ( this.state.activeDesignToolId ) {
+			case 'siteTitle':
+				return (
+					<DesignMenuPanel label={ this.translate( 'Title and Tagline' ) }>
+						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
+							<SiteTitleControl />
+						</DesignToolData>
+					</DesignMenuPanel>
+				);
+			case 'siteLogo':
+				return (
+					<DesignMenuPanel label={ this.translate( 'Logo' ) }>
+						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
+							<SiteLogoControl />
+						</DesignToolData>
+					</DesignMenuPanel>
+				);
+			case 'headerImage':
+				return (
+					<DesignMenuPanel label={ this.translate( 'Header Image' ) }>
+						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
+							<HeaderImageControl />
+						</DesignToolData>
+					</DesignMenuPanel>
+				);
+			case 'homePage':
+				return (
+					<DesignMenuPanel label={ this.translate( 'Homepage Settings' ) }>
+						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
+							<HomePageSettings />
+						</DesignToolData>
+					</DesignMenuPanel>
+				);
+			default:
+				return <DesignToolList onChange={ this.activateDesignTool } />;
 		}
-		return (
-			<DesignToolData previewDataKey={ this.state.activePreviewDataKey } >
-				{ this.renderActiveDesignTool() }
-			</DesignToolData>
-		);
 	},
 
 	renderSiteCard() {
@@ -139,7 +155,7 @@ const DesignMenu = React.createClass( {
 						<Button primary compact disabled={ this.props.isSaved } className="design-menu__save" onClick={ this.onSave } >{ saveButtonText }</Button>
 					</Card>
 				</span>
-				{ this.renderDesignTool() }
+				{ this.renderActiveDesignTool() }
 			</div>
 		);
 	}
