@@ -2,7 +2,7 @@
  * External dependencies
  */
 var Emitter = require( 'lib/mixins/emitter' ),
- 	debug = require( 'debug' )( 'calypso:push-notifications' );
+	debug = require( 'debug' )( 'calypso:push-notifications' );
 
 var initializeState,
 	registerServiceWorker;
@@ -49,7 +49,6 @@ registerServiceWorker = function( serviceWorkerRegistration ) {
 	} ).bind( this ) );
 };
 
-
 /**
  * PushNotifications component
  *
@@ -91,7 +90,7 @@ PushNotifications.prototype.saveSubscription = function( subscription ) {
 PushNotifications.prototype.subscribe = function() {
 	if ( 'serviceWorker' in window.navigator ) {
 		window.navigator.serviceWorker.ready.then( ( function( serviceWorkerRegistration ) {
-			serviceWorkerRegistration.pushManager.subscribe( { userVisibleOnly: true } ).then( ( function ( subscription ) {
+			serviceWorkerRegistration.pushManager.subscribe( { userVisibleOnly: true } ).then( ( function( subscription ) {
 				this.setState( 'subscribed' );
 				this.saveSubscription( subscription );
 			} ).bind( this ) ).catch( ( function( err ) {
@@ -118,7 +117,7 @@ PushNotifications.prototype.unsubscribe = function() {
 
 				this.deleteSubscription();
 
-				pushSubscription.unsubscribe().then( ( function(){
+				pushSubscription.unsubscribe().then( ( function() {
 					this.setState( 'unsubscribed' );
 				} ).bind( this ) ).catch( ( function( err ) {
 					debug( 'Error while unsubscribing', err );
