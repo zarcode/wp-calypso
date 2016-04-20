@@ -56,7 +56,7 @@ const SiteTitleControl = React.createClass( {
 
 	render() {
 		return (
-			<div className="design-menu-controls__control design-menu-controls__site-title-control">
+			<div className="site-title">
 				<FormFieldset>
 					<FormLabel htmlFor="blogname">{ this.translate( 'Site Title' ) }</FormLabel>
 					<FormTextInput id="blogname" name="blogname" value={ this.state.blogname } onChange={ this.onChangeSiteTitle } />
