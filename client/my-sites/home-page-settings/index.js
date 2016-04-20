@@ -129,24 +129,22 @@ const HomePageSettings = React.createClass( {
 			'is-selected': this.state.isPageOnFront
 		} );
 		return (
-			<Card compact className="home-page-settings">
-				<FormFieldset>
-					<FormLegend>{ this.translate( 'Your home page displays:' ) }</FormLegend>
-					<FormLabel>
-						<Card compact className={ blogButtonClassNames } onClick={ this.handleSetBlogOnFront } >
-							<span className="radio-button-card__header">{ this.translate( 'Latest Posts' ) }</span>
-							<span className="radio-button-card__body">{ this.translate( 'A list of your latest posts, displayed newest to oldest.' ) }</span>
-						</Card>
-					</FormLabel>
-					<FormLabel>
-						<Card compact className={ pageButtonClassNames } onClick={ this.handleSetPageOnFront } >
-							<span className="radio-button-card__header">{ this.translate( 'A Page' ) }</span>
-							<span className="radio-button-card__body">{ this.translate( 'An editable home page for your website.' ) }</span>
-						</Card>
-						{ this.renderPostSelector() }
-					</FormLabel>
-				</FormFieldset>
-			</Card>
+			<FormFieldset>
+				<FormLegend>{ this.translate( 'Your home page displays:' ) }</FormLegend>
+				<FormLabel>
+					<Card compact className={ blogButtonClassNames } onClick={ this.handleSetBlogOnFront } >
+						<span className="radio-button-card__header">{ this.translate( 'Latest Posts' ) }</span>
+						<span className="radio-button-card__body">{ this.translate( 'A list of your latest posts, displayed newest to oldest.' ) }</span>
+					</Card>
+				</FormLabel>
+				<FormLabel>
+					<Card compact className={ pageButtonClassNames } onClick={ this.handleSetPageOnFront } >
+						<span className="radio-button-card__header">{ this.translate( 'A Page' ) }</span>
+						<span className="radio-button-card__body">{ this.translate( 'An editable home page for your website.' ) }</span>
+					</Card>
+					{ this.renderPostSelector() }
+				</FormLabel>
+			</FormFieldset>
 		);
 	}
 } );
