@@ -38,7 +38,7 @@ const HeaderImageControl = React.createClass( {
 
 	render() {
 		return (
-			<div className="design-menu-controls__control design-menu-controls__header-image-control">
+			<div className="header-image">
 				<ImageSelector
 					imagePostId={ this.props.headerImagePostId }
 					onRemove={ this.removeCurrentImage }
