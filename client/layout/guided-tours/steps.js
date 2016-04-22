@@ -11,17 +11,17 @@ import Card from 'components/card';
 import Button from 'components/button';
 import ExternalLink from 'components/external-link';
 import Gridicon from 'components/gridicon';
-import { posToCss, bullseyePositioners, getStepPosition, getOverlayStyle, targetForSlug } from './positioning';
+import { posToCss, getStepPosition, getBullseyePosition, getOverlayStyle, targetForSlug } from './positioning';
 
 class GuidesBasicStep extends Component {
 	render() {
 		const stepPos = getStepPosition( this.props );
 		const stepCoords = posToCss( stepPos );
 
-		const { target, text, onNext, onQuit } = this.props;
+		const { targetSlug, text, onNext, onQuit } = this.props;
 		return (
 			<div>
-				<GuidesOverlay target={ target } />
+				<GuidesOverlay targetSlug={ targetSlug } />
 				<Card className="guidestours__step" style={ stepCoords } >
 					<p>{ text }</p>
 					<div className="guidestours__choice-button-row">
@@ -138,11 +138,11 @@ class GuidesActionStep extends Component {
 		const stepCoords = posToCss( stepPos );
 		const pointerCoords = posToCss( bullseyePos );
 
-		const { target, text } = this.props;
+		const { targetSlug, text } = this.props;
 
 		return (
 			<div>
-				<GuidesOverlay target={ target } />
+				<GuidesOverlay targetSlug={ targetSlug } />
 				<Card className="guidestours__step" style={ stepCoords } >
 					<p>{ text }</p>
 					<div className="guidestours__bullseye-instructions">
@@ -245,7 +245,8 @@ GuidesPointer.propTypes = {
 
 class GuidesOverlay extends Component {
 	render() {
-		const { target } = this.props;
+		const { targetSlug } = this.props;
+		const target = targetForSlug( targetSlug );
 
 		if ( !target ) {
 			return;
@@ -266,7 +267,7 @@ class GuidesOverlay extends Component {
 }
 
 GuidesOverlay.propTypes = {
-	target: PropTypes.instanceOf( HTMLElement ),
+	targetSlug: PropTypes.string.isRequired,
 };
 
 export default {
@@ -275,5 +276,4 @@ export default {
 	GuidesActionStep: localize( GuidesActionStep ),
 	GuidesFirstStep: localize( GuidesFirstStep ),
 	GuidesFinishStep: localize( GuidesFinishStep ),
-}
-
+};
