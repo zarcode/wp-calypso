@@ -11,17 +11,19 @@ import Card from 'components/card';
 import Button from 'components/button';
 import ExternalLink from 'components/external-link';
 import Gridicon from 'components/gridicon';
-import { posToCss, getStepPosition, getBullseyePosition, getOverlayStyle, targetForSlug } from './positioning';
+import { posToCss, getStepPosition, getBullseyePosition, getOverlayStyle, targetForSlug, getScrolledRect } from './positioning';
 
 class GuidesBasicStep extends Component {
 	render() {
 		const stepPos = getStepPosition( this.props );
 		const stepCoords = posToCss( stepPos );
 
-		const { targetSlug, text, onNext, onQuit } = this.props;
+		const targetRect = getScrolledRect( this.props );
+
+		const { text, onNext, onQuit } = this.props;
 		return (
 			<div>
-				<GuidesOverlay targetSlug={ targetSlug } />
+				<GuidesOverlay targetRect={ targetRect } />
 				<Card className="guidestours__step" style={ stepCoords } >
 					<p>{ text }</p>
 					<div className="guidestours__choice-button-row">
@@ -138,11 +140,13 @@ class GuidesActionStep extends Component {
 		const stepCoords = posToCss( stepPos );
 		const pointerCoords = posToCss( bullseyePos );
 
-		const { targetSlug, text } = this.props;
+		const targetRect = getScrolledRect( this.props );
+
+		const { text } = this.props;
 
 		return (
 			<div>
-				<GuidesOverlay targetSlug={ targetSlug } />
+				<GuidesOverlay targetRect={ targetRect } />
 				<Card className="guidestours__step" style={ stepCoords } >
 					<p>{ text }</p>
 					<div className="guidestours__bullseye-instructions">
@@ -245,15 +249,8 @@ GuidesPointer.propTypes = {
 
 class GuidesOverlay extends Component {
 	render() {
-		const { targetSlug } = this.props;
-		const target = targetForSlug( targetSlug );
-
-		if ( !target ) {
-			return;
-		}
-
-		const rect = target.getBoundingClientRect();
-		const overlayStyle = getOverlayStyle( { rect: rect } );
+		const { targetRect } = this.props;
+		const overlayStyle = getOverlayStyle( { rect: targetRect } );
 
 		return (
 			<div className="guidestours__overlay-container">
@@ -267,7 +264,7 @@ class GuidesOverlay extends Component {
 }
 
 GuidesOverlay.propTypes = {
-	targetSlug: PropTypes.string.isRequired,
+	targetRect: PropTypes.object.isRequired,
 };
 
 export default {

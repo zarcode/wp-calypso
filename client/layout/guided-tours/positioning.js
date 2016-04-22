@@ -110,6 +110,30 @@ function validatePlacement( placement, target ) {
 		: placement;
 }
 
+function getScrollDiff( targetSlug, container ) {
+	const target = targetForSlug( targetSlug );
+	const { top, bottom } = target.getBoundingClientRect();
+	if ( targetSlug !== 'themes' ) {
+		return 0;
+	}
+	if ( bottom + DIALOG_PADDING + DIALOG_HEIGHT <=
+			document.documentElement.clientHeight ) {
+		return 0; // bottom: below, but what about beside?
+	}
+	// if ( document.documentElement.clientHeight ) {
+
+	// }
+	console.log( 'target', target );
+	console.log( 'target.getBoundingClientRect()', target.getBoundingClientRect() );
+	console.log( 'bottom', bottom);
+	console.log( 'document.documentElement.getBoundingClientRect()', document.documentElement.getBoundingClientRect());
+	const scrollMax = container.scrollHeight -
+		container.clientHeight - container.scrollTop;
+
+	console.log( 'scrollMax, container.scrollHeight, container.clientHeight, container.scrollTop, top, .75 * top', scrollMax, container.scrollHeight, container.clientHeight, container.scrollTop, top, (.75 * top) );
+	return Math.min( .75 * top, scrollMax );
+}
+
 function scrollIntoView( target ) {
 	const targetSlug = target && target.dataset && target.dataset.tipTarget;
 
@@ -117,48 +141,71 @@ function scrollIntoView( target ) {
 		return 0;
 	}
 
-	const { top, bottom } = target.getBoundingClientRect();
-
-	if ( bottom + DIALOG_PADDING + DIALOG_HEIGHT <=
-			document.documentElement.clientHeight ) {
-		return 0;
-	}
-
 	const container = query( '#secondary .sidebar' )[ 0 ];
-	const scrollMax = container.scrollHeight -
-		container.clientHeight - container.scrollTop;
-	const y = Math.min( .75 * top, scrollMax );
+	const y = getScrollDiff( targetSlug, container );
 
 	scrollTo( { y, container } );
 	return y;
+}
+
+export function getScrolledRect( { targetSlug } ) {
+	const target = targetForSlug( targetSlug );
+	let rect = target.getBoundingClientRect();
+	console.log( 'rect before scroll', rect );
+	const container = query( '#secondary .sidebar' )[ 0 ];
+	// TODO(lsinger): pretty certain 0.98 won't work in all situations,
+	// more research to be done here
+	const y = getScrollDiff( targetSlug, container ) * 0.98;
+	console.log( 'scrollDiff', y );
+	const scrolledRect = {
+		top: rect.top - y,
+		bottom: rect.bottom - y,
+		left: rect.left,
+		right: rect.right,
+		height: rect.height,
+		width: rect.width,
+	};
+	console.log( 'rect after scroll', rect );
+	return scrolledRect;
 }
 
 export function getOverlayStyle( { rect } ) {
 	const clientWidth = document.documentElement.clientWidth;
 	const clientHeight = document.documentElement.clientHeight;
 
+	console.log( 'getOverlayStyle: rect, clientWidth', rect, clientWidth );
+
+	const correctedRect = {
+		top: rect.top,
+		left: rect.left < 0 ? 0 : rect.left,
+		height: rect.height,
+		width: rect.width,
+		right: rect.left < 0 ? rect.right - rect.left : rect.right,
+		bottom: rect.bottom,
+	};
+
 	return {
 		top: {
 			top: '0px',
 			left: '0px',
 			right: '0px',
-			height: rect.top + 'px',
+			height: correctedRect.top + 'px',
 		},
 		left: {
-			top: rect.top + 'px',
+			top: correctedRect.top + 'px',
 			left: '0px',
-			width: rect.left + 'px',
-			height: rect.height + 'px',
+			width: correctedRect.left + 'px',
+			height: correctedRect.height + 'px',
 		},
 		right: {
-			top: rect.top + 'px',
+			top: correctedRect.top + 'px',
 			right: '0px',
-			height: rect.height + 'px',
-			width: ( clientWidth - rect.right ) + 'px',
+			height: correctedRect.height + 'px',
+			width: ( clientWidth - correctedRect.right ) + 'px',
 		},
 		bottom: {
 			bottom: '0px',
-			height: ( clientHeight - rect.bottom ) + 'px',
+			height: ( clientHeight - correctedRect.bottom ) + 'px',
 			left: '0px',
 			right: '0px',
 		},
