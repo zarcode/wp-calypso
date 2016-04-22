@@ -998,10 +998,9 @@ Undocumented.prototype.readTags = function( fn ) {
 };
 
 Undocumented.prototype.readTagPosts = function( query, fn ) {
-	var params = omit( query, 'tag' );
-	debug( '/read/tags/' + query.tag + '/posts' );
-	params.apiVersion = '1.2';
-	this.wpcom.req.get( '/read/tags/' + encodeURIComponent( query.tag ) + '/posts', params, fn );
+        debug( '/read/tag', query );
+        const params = Object.assign( { apiVersion: '1.2' }, query );
+        this.wpcom.req.get( '/read/tag', params, fn );
 };
 
 Undocumented.prototype.followReaderTag = function( tag, fn ) {
