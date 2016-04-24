@@ -16,12 +16,12 @@ import page from 'page';
 import Main from 'components/main';
 import HeaderCake from 'components/header-cake';
 import SectionHeader from 'components/section-header';
+import ThemeDownloadCard from './theme-download-card';
 import Button from 'components/button';
 import SectionNav from 'components/section-nav';
 import NavTabs from 'components/section-nav/tabs';
 import NavItem from 'components/section-nav/item';
 import Card from 'components/card';
-import Gridicon from 'components/gridicon';
 import { signup } from 'state/themes/actions';
 import i18n from 'lib/mixins/i18n';
 
@@ -145,29 +145,10 @@ const ThemeSheet = React.createClass( {
 	},
 
 	renderDownload() {
-		var downloadText;
 		if ( 'Free' !== this.props.price ) {
-			return '';
+			return null;
 		}
-		downloadText = this.props.download
-		? i18n.translate( 'This theme is available for download to be used on your {{u}}WordPress self-hosted{{/u}} installation.', {
-			components: {
-				u: <u />
-			}
-		} )
-		: i18n.translate( 'This theme is available for download to be used on your {{u}}WordPress self-hosted{{/u}} installation from the {{a}}WordPress.org Themes Directory{{/a}}.', {
-			components: {
-				u: <u />,
-				a: <a href={ 'http://wordpress.org/themes/' + this.props.id } />
-			}
-		} );
-		return (
-			<Card className="themes__sheet-download">
-				<Gridicon icon="cloud-download" size={ 48 } />
-				<p>{ downloadText }</p>
-				<button type="button" className="button" onClick={ this.onDownloadButtonClick }>{ i18n.translate( 'Download' ) }</button>
-			</Card>
-		);
+		return <ThemeDownloadCard theme={ this.props.id } href={ this.props.download } />
 	},
 
 	render() {
