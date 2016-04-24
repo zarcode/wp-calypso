@@ -83,7 +83,6 @@ var SuggestionsList = React.createClass( {
 	},
 
 	_renderSuggestions: function() {
-
 		return map( this.props.suggestions, function( suggestion, index ) {
 			var match = this._computeSuggestionMatch( suggestion ),
 				classes = classNames( 'token-field__suggestion', {

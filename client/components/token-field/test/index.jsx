@@ -138,6 +138,10 @@ describe( 'TokenField', function() {
 			expect( getSuggestionsHTML() ).to.deep.equal( wrapper.state( 'tokenSuggestions' ) );
 		} );
 
+		it( 'should remove already added tags from suggestions', function() {
+			expect( getSuggestionsHTML() ).not.to.contain( getTokensHTML );
+		} );
+
 		it( 'should suggest partial matches', function() {
 			setText( 't' );
 			expect( getSuggestionsHTML() ).to.deep.equal( fixtures.matchingSuggestions.t );
