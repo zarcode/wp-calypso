@@ -26,6 +26,7 @@ env-config.sh
 /build
 
 /public/*.js
+!/public/service-worker.js
 /public/style*.css
 /public/style*.css.map
 /public/editor*.css
