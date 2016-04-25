@@ -206,6 +206,14 @@ const ReaderSidebar = React.createClass( {
 								<span className="menu-link-text">{ this.translate( 'My Likes' ) }</span>
 							</a>
 						</li>
+
+						<li className={ ReaderSidebarHelper.itemLinkClass( '/warmstart', this.props.path, { 'sidebar-streams__warmstart': true } ) }>
+							<a href="/warmstart">
+								<Gridicon icon="my-sites" size={ 24 } />
+								<span className="menu-link-text">{ this.translate( 'Warm Start (Alpha)' ) }</span>
+							</a>
+						</li>
+
 					</ul>
 				</SidebarMenu>
 

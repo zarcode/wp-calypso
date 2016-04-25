@@ -726,5 +726,43 @@ module.exports = {
 			} ),
 			document.getElementById( 'primary' )
 		);
+	},
+
+	warmstart: function( context ) {
+		// var LikedPostsStream = require( 'reader/liked-stream' ),
+		// 	basePath = route.sectionify( context.path ),
+		// 	fullAnalyticsPageTitle = analyticsPageTitle + ' > Warmstart',
+		// 	likedPostsStore = feedStreamFactory( 'likes' ),
+		// 	mcKey = 'postlike';
+
+		// ensureStoreLoading( likedPostsStore, context );
+
+		// trackPageLoad( basePath, fullAnalyticsPageTitle, mcKey );
+
+		// ReactDom.render(
+		// 	React.createElement( LikedPostsStream, {
+		// 		key: 'liked',
+		// 		store: likedPostsStore,
+		// 		setPageTitle: setPageTitle,
+		// 		trackScrollPage: trackScrollPage.bind(
+		// 			null,
+		// 			basePath,
+		// 			fullAnalyticsPageTitle,
+		// 			analyticsPageTitle,
+		// 			mcKey
+		// 		),
+		// 		onUpdatesShown: trackUpdatesLoaded.bind( null, mcKey )
+		// 	} ),
+		// 	document.getElementById( 'primary' )
+		// );
+
+		var WarmStartStream = require( 'reader/warmstart-stream' );
+
+		ReactDom.render(
+			React.createElement(
+				WarmStartStream
+			),
+			document.getElementById( 'primary' )
+		);
 	}
 };

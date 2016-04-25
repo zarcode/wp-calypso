@@ -86,4 +86,5 @@ module.exports = function() {
 	page( '/tags', controller.loadSubscriptions, controller.initAbTests, updateLastRoute, controller.removePost, controller.sidebar, controller.recommendedTags );
 
 	page( '/discover', updateLastRoute, controller.loadSubscriptions, controller.initAbTests, controller.removePost, controller.sidebar, controller.discover );
+	page( '/warmstart', controller.loadSubscriptions, controller.initAbTests, updateLastRoute, controller.removePost, controller.sidebar, controller.warmstart );
 };

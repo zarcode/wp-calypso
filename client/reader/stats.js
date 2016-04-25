@@ -63,6 +63,9 @@ function getLocation() {
 	if ( path.indexOf( '/discover' ) === 0 ) {
 		return 'discover';
 	}
+	if ( path.indexOf( '/warmstart' ) === 0 ) {
+		return 'postlike';
+	}
 	return 'unknown';
 }
 
