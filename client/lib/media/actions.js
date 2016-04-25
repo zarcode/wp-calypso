@@ -21,8 +21,9 @@ var Dispatcher = require( 'dispatcher' ),
 /**
  * Module variables
  */
-var MediaActions = {},
-	_fetching = {};
+var MediaActions = {
+	_fetching: {}
+};
 
 /**
  * Constants
@@ -39,11 +40,11 @@ MediaActions.setQuery = function( siteId, query ) {
 
 MediaActions.fetch = function( siteId, itemId ) {
 	var fetchKey = [ siteId, itemId ].join();
-	if ( _fetching[ fetchKey ] ) {
+	if ( MediaActions._fetching[ fetchKey ] ) {
 		return;
 	}
 
-	_fetching[ fetchKey ] = true;
+	MediaActions._fetching[ fetchKey ] = true;
 	Dispatcher.handleViewAction( {
 		type: 'FETCH_MEDIA_ITEM',
 		siteId: siteId,
@@ -59,7 +60,7 @@ MediaActions.fetch = function( siteId, itemId ) {
 			data: data
 		} );
 
-		delete _fetching[ fetchKey ];
+		delete MediaActions._fetching[ fetchKey ];
 	} );
 };
 
