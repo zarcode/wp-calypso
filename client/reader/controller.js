@@ -30,6 +30,7 @@ const abtest = require( 'lib/abtest' ),
 	stats = require( 'reader/stats' );
 
 import userSettings from 'lib/user-settings';
+import { getCurrentUser } from 'state/current-user/selectors';
 
 // This holds the last title set on the page. Removing the overlay doesn't trigger a re-render, so we need a way to
 // reset it
@@ -729,40 +730,33 @@ module.exports = {
 	},
 
 	warmstart: function( context ) {
-		// var LikedPostsStream = require( 'reader/liked-stream' ),
-		// 	basePath = route.sectionify( context.path ),
-		// 	fullAnalyticsPageTitle = analyticsPageTitle + ' > Warmstart',
-		// 	likedPostsStore = feedStreamFactory( 'likes' ),
-		// 	mcKey = 'postlike';
+		var user = getCurrentUser( context.store.getState() ),
+			WarmstartStream = require( 'reader/warmstart-stream' ),
+			basePath = route.sectionify( context.path ),
+			fullAnalyticsPageTitle = analyticsPageTitle + ' > Warmstart',
+			warmstartPostsStore = feedStreamFactory( 'warmstart:' + user.ID ),
+			mcKey = 'warmstart';
 
-		// ensureStoreLoading( likedPostsStore, context );
+		ensureStoreLoading( warmstartPostsStore, context );
 
-		// trackPageLoad( basePath, fullAnalyticsPageTitle, mcKey );
-
-		// ReactDom.render(
-		// 	React.createElement( LikedPostsStream, {
-		// 		key: 'liked',
-		// 		store: likedPostsStore,
-		// 		setPageTitle: setPageTitle,
-		// 		trackScrollPage: trackScrollPage.bind(
-		// 			null,
-		// 			basePath,
-		// 			fullAnalyticsPageTitle,
-		// 			analyticsPageTitle,
-		// 			mcKey
-		// 		),
-		// 		onUpdatesShown: trackUpdatesLoaded.bind( null, mcKey )
-		// 	} ),
-		// 	document.getElementById( 'primary' )
-		// );
-
-		var WarmStartStream = require( 'reader/warmstart-stream' );
+		trackPageLoad( basePath, fullAnalyticsPageTitle, mcKey );
 
 		ReactDom.render(
-			React.createElement(
-				WarmStartStream
-			),
+			React.createElement( WarmstartStream, {
+				key: 'warmstart',
+				store: warmstartPostsStore,
+				setPageTitle: setPageTitle,
+				trackScrollPage: trackScrollPage.bind(
+					null,
+					basePath,
+					fullAnalyticsPageTitle,
+					analyticsPageTitle,
+					mcKey
+				),
+				onUpdatesShown: trackUpdatesLoaded.bind( null, mcKey )
+			} ),
 			document.getElementById( 'primary' )
 		);
 	}
+
 };
