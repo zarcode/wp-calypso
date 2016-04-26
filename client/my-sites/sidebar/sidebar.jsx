@@ -14,8 +14,7 @@ import page from 'page';
 /**
  * Internal dependencies
  */
-var abtest = require( 'lib/abtest' ).abtest,
-	AdsUtils = require( 'lib/ads/utils' ),
+var AdsUtils = require( 'lib/ads/utils' ),
 	config = require( 'config' ),
 	CurrentSite = require( 'my-sites/current-site' ),
 	getCustomizeUrl = require( '../themes/helpers' ).getCustomizeUrl,
