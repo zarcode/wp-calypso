@@ -195,6 +195,10 @@ UndocumentedSite.prototype.postCounts = function( options, callback ) {
 	return this.wpcom.req.get( '/sites/' + this._id + '/post-counts/' + type, query, callback );
 };
 
+UndocumentedSite.prototype.postTypeTaxonomies = function( postType, callback ) {
+	return this.wpcom.req.get( '/sites/' + this._id + '/post-types/' + postType + '/taxonomies', callback );
+};
+
 /**
  * Create an `Export` instance
  *
