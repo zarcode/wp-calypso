@@ -17,7 +17,7 @@ import LoggedOutFormLinkItem from 'components/logged-out-form/link-item';
 import SignupForm from 'components/signup-form';
 import WpcomLoginForm from 'signup/wpcom-login-form';
 import config from 'config';
-import { createAccount, authorize } from 'state/jetpack-connect/actions';
+import { createAccount, authorize, activateManage } from 'state/jetpack-connect/actions';
 import JetpackConnectNotices from './jetpack-connect-notices';
 import observe from 'lib/mixins/data-observe';
 import userUtilities from 'lib/user/utils';
@@ -29,7 +29,14 @@ import i18n from 'lib/mixins/i18n';
 /**
  * Module variables
  */
-const renderFormHeader = ( site, isConnected = false ) => {
+
+/***
+ * Renders a header common to both the logged in and logged out forms
+ * @param {String} siteUrl A site URL to display in the header
+ * @param {Boolean} isConnected Is the connection complete
+ * @returns {Object} The JSX for the form's header
+ */
+const renderFormHeader = ( siteUrl, isConnected = false ) => {
 	const headerText = ( isConnected )
 		? i18n.translate( 'You are connected!' )
 		: i18n.translate( 'Connect your self-hosted WordPress' );
@@ -40,7 +47,7 @@ const renderFormHeader = ( site, isConnected = false ) => {
 		<div>
 			<ConnectHeader headerText={ headerText }
 					subHeaderText={ subHeaderText } />
-			<CompactCard className="jetpack-connect__authorize-form-header">{ site }</CompactCard>
+			<CompactCard className="jetpack-connect__authorize-form-header">{ siteUrl }</CompactCard>
 		</div>
 	);
 };
@@ -112,9 +119,12 @@ const LoggedInForm = React.createClass( {
 	},
 
 	handleSubmit() {
-		const { queryObject, siteReceived, plansURL } = this.props.jetpackConnectAuthorize;
-		if ( siteReceived && plansURL ) {
-			page( plansURL );
+		const { queryObject, manageActivated, activateManageSecret, plansUrl, authorizeSuccess } = this.props.jetpackConnectAuthorize;
+		if ( activateManageSecret && ! manageActivated ) {
+			this.props.activateManage( queryObject.client_id, queryObject.state, activateManageSecret );
+			page( plansUrl );
+		} else if ( authorizeSuccess && plansUrl ) {
+			page( plansUrl );
 		} else {
 			this.props.authorize( queryObject );
 		}
@@ -130,7 +140,8 @@ const LoggedInForm = React.createClass( {
 	},
 
 	isAuthorizing() {
-		return this.props.jetpackConnectAuthorize && this.props.jetpackConnectAuthorize.isAuthorizing;
+		const { isAuthorizing, isActivating } = this.props.jetpackConnectAuthorize;
+		return ( isAuthorizing || isActivating );
 	},
 
 	renderNotices() {
@@ -272,6 +283,6 @@ export default connect(
 			jetpackConnectSessions: state.jetpackConnect.jetpackConnectSessions
 		};
 	},
-	dispatch => bindActionCreators( { authorize, createAccount }, dispatch )
+	dispatch => bindActionCreators( { authorize, createAccount, activateManage }, dispatch )
 )( JetpackConnectAuthorizeForm );
 

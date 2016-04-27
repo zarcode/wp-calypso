@@ -18,6 +18,8 @@ import {
 	JETPACK_CONNECT_AUTHORIZE_RECEIVE_SITE_LIST,
 	JETPACK_CONNECT_CREATE_ACCOUNT,
 	JETPACK_CONNECT_CREATE_ACCOUNT_RECEIVE,
+	JETPACK_CONNECT_ACTIVATE_MANAGE,
+	JETPACK_CONNECT_ACTIVATE_MANAGE_RECEIVE,
 	JETPACK_CONNECT_REDIRECT,
 	JETPACK_CONNECT_STORE_SESSION
 } from 'state/action-types';
@@ -186,6 +188,32 @@ export default {
 				dispatch( {
 					type: JETPACK_CONNECT_AUTHORIZE_RECEIVE,
 					siteId: client_id,
+					data: null,
+					error: error
+				} );
+			} );
+		};
+	},
+	activateManage( blogId, state, secret ) {
+		return ( dispatch ) => {
+			debug( 'Activating manage', blogId );
+			dispatch( {
+				type: JETPACK_CONNECT_ACTIVATE_MANAGE,
+				blogId: blogId
+			} );
+			wpcom.undocumented().activateManage( blogId, state, secret )
+			.then( ( data ) => {
+				debug( 'Manage activated!', data );
+				dispatch( {
+					type: JETPACK_CONNECT_ACTIVATE_MANAGE_RECEIVE,
+					data: data,
+					error: null
+				} );
+			} )
+			.catch( ( error ) => {
+				debug( 'Manage activation error', error );
+				dispatch( {
+					type: JETPACK_CONNECT_ACTIVATE_MANAGE_RECEIVE,
 					data: null,
 					error: error
 				} );
