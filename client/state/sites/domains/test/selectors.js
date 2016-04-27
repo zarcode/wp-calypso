@@ -12,94 +12,39 @@ import {
 	isRequestingSiteDomains
 } from '../selectors';
 
+/**
+ * Fixture data
+ */
+import {
+	SITE_ID_FIRST as firstSiteId,
+	SITE_ID_SECOND as secondSiteId,
+	SITE_FIRST_DOMAINS as firstSiteDomains,
+	getStateInstance
+} from './fixture';
+
 describe( 'selectors', () => {
 	describe( '#getDomainsBySite()', () => {
 		it( 'should return domains by site', () => {
-			const domain_1 = {
-				data: [
-					{ primaryDomain: false },
-					{ primaryDomain: false },
-					{ primaryDomain: true }
-				]
-			};
-
-			const domain_2 = {
-				data: [
-					{ primaryDomain: true },
-					{ primaryDomain: false },
-					{ primaryDomain: false }
-				]
-			};
-
-			const state = {
-				sites: {
-					domains: {
-						2916284: domain_1,
-						77203074: domain_2
-					}
-				}
-			};
-
-			const domains = getDomainsBySite( state, { ID: 77203074 } );
-			expect( domains ).to.eql( domain_2 );
+			const state = getStateInstance();
+			const domains = getDomainsBySite( state, { ID: firstSiteId } );
+			expect( domains ).to.eql( firstSiteDomains );
 		} );
 	} );
 
 	describe( '#getDomainsBySiteId()', () => {
 		it( 'should return domains by site id', () => {
-			const domain_1 = {
-				data: [
-					{ primaryDomain: false },
-					{ primaryDomain: false },
-					{ primaryDomain: true }
-				]
-			};
-
-			const domain_2 = {
-				data: [
-					{ primaryDomain: true },
-					{ primaryDomain: false },
-					{ primaryDomain: false }
-				]
-			};
-
-			const state = {
-				sites: {
-					domains: {
-						2916284: domain_1,
-						77203074: domain_2
-					}
-				}
-			};
-
-			const domains = getDomainsBySiteId( state, 2916284 );
-			expect( domains ).to.eql( domain_1 );
+			const state = getStateInstance();
+			const domains = getDomainsBySiteId( state, firstSiteId );
+			expect( domains ).to.eql( firstSiteDomains );
 		} );
 	} );
 
 	describe( '#isRequestingSiteDomains()', () => {
 		it( 'should return true if we are fetching domains', () => {
-			const state = {
-				sites: {
-					domains: {
-						2916284: {
-							data: null,
-							error: null,
-							hasLoadedFromServer: false,
-							isRequesting: true
-						},
-						77203074: {
-							data: null,
-							error: null,
-							hasLoadedFromServer: false,
-							isRequesting: false
-						}
-					}
-				}
-			};
+			const state = getStateInstance();
 
-			expect( isRequestingSiteDomains( state, 2916284 ) ).to.equal( true );
-			expect( isRequestingSiteDomains( state, 77203074 ) ).to.equal( false );
+			expect( isRequestingSiteDomains( state, firstSiteId ) ).to.equal( false );
+			expect( isRequestingSiteDomains( state, secondSiteId ) ).to.equal( true );
 			expect( isRequestingSiteDomains( state, 'unknown' ) ).to.equal( false );
 		} );
 	} );
