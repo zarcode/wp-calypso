@@ -205,8 +205,7 @@ if ( config.isEnabled( 'reader' ) ) {
 		'/discover',
 		'/following',
 		'/recommendations',
-		'/tags',
-		'/warmstart'
+		'/tags'
 	];
 
 	sections.push( {

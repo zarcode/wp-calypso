@@ -64,6 +64,8 @@ module.exports = function() {
 	}
 
 	page( '/read/a8c', updateLastRoute, controller.removePost, controller.sidebar, forceTeamA8C, controller.readA8C );
+	page( '/read/warmstart', controller.loadSubscriptions, updateLastRoute, controller.removePost, controller.sidebar, forceTeamA8C, controller.warmstart );
+
 	if ( config.isEnabled( 'reader/search' ) ) {
 		page( '/read/search', updateLastRoute, controller.removePost, controller.sidebar, controller.search );
 	}
@@ -86,5 +88,4 @@ module.exports = function() {
 	page( '/tags', controller.loadSubscriptions, controller.initAbTests, updateLastRoute, controller.removePost, controller.sidebar, controller.recommendedTags );
 
 	page( '/discover', updateLastRoute, controller.loadSubscriptions, controller.initAbTests, controller.removePost, controller.sidebar, controller.discover );
-	page( '/warmstart', controller.loadSubscriptions, controller.initAbTests, updateLastRoute, controller.removePost, controller.sidebar, controller.warmstart );
 };
