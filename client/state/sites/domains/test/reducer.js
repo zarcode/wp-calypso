@@ -7,14 +7,43 @@ import deepFreeze from 'deep-freeze';
 /**
  * Internal dependencies
  */
-import { domains as domainsReducer} from '../reducer';
+import domainsReducer, {
+	items as itemsReducer,
+	requesting as requestReducer,
+	errors as errorsReducer
+} from '../reducer';
+
+/**
+ * Action types constantes
+ */
 import {
-	SITE_DOMAINS_FETCH,
-	SITE_DOMAINS_FETCH_COMPLETED,
-	SITE_DOMAINS_FETCH_FAILED,
-	SERIALIZE,
-	DESERIALIZE
+	SITE_DOMAINS_RECEIVE,
+	SITE_DOMAINS_REQUEST,
+	SITE_DOMAINS_REQUEST_SUCCESS,
+	SITE_DOMAINS_REQUEST_FAILURE,
 } from 'state/action-types';
+
+/**
+ * Actions creators functions
+ */
+import {
+	createDomainsRequestAction,
+	createDomainsRequestSuccessAction,
+	createDomainsRequestFailureAction
+} from '../actions';
+
+/**
+ * Fixture data
+ */
+import {
+	SITE_ID_FIRST as siteId,
+	SITE_ID_FIRST as firstSiteId,
+	SITE_ID_SECOND as secondSiteId,
+	SITE_FIRST_DOMAINS as siteDomains,
+	DOMAIN_PRIMARY as firstDomain,
+	DOMAIN_NOT_PRIMARY as secondDomain,
+	ERROR_MESSAGE_RESPONSE as errorMessageResponse
+} from './fixture';
 
 /**
  * Make a generic expect test comparing states before and after
@@ -23,227 +52,188 @@ import {
  * @param {Object} before - state before instance
  * @param {Object} action - reducer action
  * @param {Object} after - state after instance
+ * @param {Function} [reducer] - reducer to test. domainsReducer as default
  */
-
-const expectBeforeEqualToAfter = ( before, action, after ) => {
-	expect( domainsReducer( before, action ) ).to.eql( after );
+const expectBeforeEqualToAfter = ( before, action, after, reducer = domainsReducer ) => {
+	expect( reducer( before, action ) ).to.eql( after );
 };
 
 describe( 'reducer', () => {
-	describe( '#domainsReducer()', () => {
-		it( 'should return an empty state when original state is undefined and action is empty', () => {
-			expectBeforeEqualToAfter( undefined, {}, {} );
+	it( 'should export expected reducer keys', () => {
+		expect( domainsReducer( undefined, {} ) ).to.have.keys( [
+			'items',
+			'requesting',
+			'errors'
+		] );
+	} );
+
+	describe( '#items()', () => {
+		it( 'should default to an empty object', () => {
+			expectBeforeEqualToAfter( undefined, {}, {}, itemsReducer );
 		} );
 
-		it( 'should return an empty state when original state and action are empty {}', () => {
-			const domainsBefore = {};
-			deepFreeze( domainsBefore );
-
-			expectBeforeEqualToAfter( domainsBefore, {}, {} );
-		} );
-
-		it( 'should return an empty state when original state is undefined and action is unknown', () => {
+		it( 'should index items state by site ID', () => {
+			const stateBefore = undefined;
 			const action = {
-				type: 'SAY_HELLO',
-				siteId: 77203074
+				type: SITE_DOMAINS_RECEIVE,
+				siteId,
+				domains: siteDomains
+			};
+			const stateAfter = {
+				[ siteId ]: siteDomains
 			};
 
 			deepFreeze( action );
-
-			expectBeforeEqualToAfter( undefined, action, {} );
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, itemsReducer );
 		} );
 
-		it( 'should return the original state when action is unknown', () => {
-			const domainsBefore = {
-				77203074: {
-					data: [],
-					error: null,
-					hasLoadedFromServer: true,
-					isRequesting: false
-				}
+		it( 'should override domains for same site', () => {
+			const stateBefore = {
+				[ siteId ]: [
+					firstDomain,
+					secondDomain
+				]
 			};
 			const action = {
-				type: 'UNKNOWN_ACTION_TYPE',
-				siteId: 77203074
+				type: SITE_DOMAINS_RECEIVE,
+				siteId,
+				domains: [ secondDomain ]
+			};
+			const stateAfter = {
+				[ siteId ]: [ secondDomain ]
 			};
 
-			const domainsAfter = domainsBefore;
-
-			deepFreeze( domainsBefore );
+			deepFreeze( stateBefore );
 			deepFreeze( action );
 
-			expectBeforeEqualToAfter( domainsBefore, action, domainsAfter );
-		} );
-
-		it( 'should return the initial state with requesting enabled when fetching is triggered', () => {
-			const action = {
-				type: SITE_DOMAINS_FETCH,
-				siteId: 77203074
-			};
-			const domainsAfter = {
-				77203074: {
-					data: null,
-					error: null,
-					hasLoadedFromServer: false,
-					isRequesting: true
-				}
-			};
-
-			deepFreeze( action );
-
-			expectBeforeEqualToAfter( undefined, action, domainsAfter );
-		} );
-
-		it( 'should return the original state with an error and requesting disabled when fetching failed', () => {
-			const domainsBefore = {
-				77203074: {
-					data: [],
-					error: null,
-					hasLoadedFromServer: true,
-					isRequesting: true
-				}
-			};
-			const action = {
-				type: SITE_DOMAINS_FETCH_FAILED,
-				siteId: 77203074,
-				error: 'Unable to fetch site domains'
-			};
-
-			const domainsAfter = {
-				77203074: {
-					data: [],
-					error: 'Unable to fetch site domains',
-					hasLoadedFromServer: true,
-					isRequesting: false
-				}
-			};
-
-			deepFreeze( domainsBefore );
-			deepFreeze( action );
-
-			expectBeforeEqualToAfter( domainsBefore, action, domainsAfter );
-		} );
-
-		it( 'should return a list of domains with loaded from server enabled and requesting disabled when fetching completed', () => {
-			const action = {
-				type: SITE_DOMAINS_FETCH_COMPLETED,
-				siteId: 77203074,
-				domains: []
-			};
-			const domainsAfter = {
-				77203074: {
-					data: [],
-					error: null,
-					hasLoadedFromServer: true,
-					isRequesting: false
-				}
-			};
-
-			deepFreeze( action );
-
-			expectBeforeEqualToAfter( undefined, action, domainsAfter );
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, itemsReducer );
 		} );
 
 		it( 'should accumulate domains for different sites', () => {
-			const domainsBefore = {
-				77203074: {
-					data: [],
-					error: null,
-					hasLoadedFromServer: true,
-					isRequesting: false
-				}
+			const stateBefore = {
+				[ firstSiteId ]: [ firstDomain ]
 			};
 			const action = {
-				type: SITE_DOMAINS_FETCH,
-				siteId: 2916284
+				type: SITE_DOMAINS_RECEIVE,
+				siteId: secondSiteId,
+				domains: [ secondDomain ]
 			};
-			const domainsAfter = {
-				77203074: {
-					data: [],
-					error: null,
-					hasLoadedFromServer: true,
-					isRequesting: false
-				},
-				2916284: {
-					data: null,
-					error: null,
-					hasLoadedFromServer: false,
-					isRequesting: true
-				}
+			const stateAfter = {
+				[ firstSiteId ]: [ firstDomain ],
+				[ secondSiteId ]: [ secondDomain ]
 			};
 
-			deepFreeze( domainsBefore );
+			deepFreeze( stateBefore );
 			deepFreeze( action );
 
-			expectBeforeEqualToAfter( domainsBefore, action, domainsAfter );
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, itemsReducer );
+		} );
+	} );
+
+	describe( '#requesting()', () => {
+		it( 'should default to an empty object', () => {
+			expectBeforeEqualToAfter( undefined, {}, {}, requestReducer );
 		} );
 
-		it( 'should override previous domains of the same site', () => {
-			const domainsBefore = {
-				77203074: {
-					data: null,
-					error: 'Unable to fetch site domains',
-					hasLoadedFromServer: false,
-					isRequesting: false
-				}
+		it( 'should index `requesting` state by site ID', () => {
+			const stateBefore = undefined;
+			const action = {
+				type: SITE_DOMAINS_REQUEST,
+				siteId
+			};
+			const stateAfter = {
+				[ siteId ]: true
+			};
+
+			deepFreeze( action );
+
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, requestReducer );
+		} );
+
+		it( 'should update `requesting` state by site ID on SUCCESS', () => {
+			const stateBefore = {
+				2916284: true
 			};
 			const action = {
-				type: SITE_DOMAINS_FETCH,
-				siteId: 77203074
-			};
-			const domainsAfter = {
-				77203074: {
-					data: null,
-					error: null,
-					hasLoadedFromServer: false,
-					isRequesting: true
-				}
+				type: SITE_DOMAINS_REQUEST_SUCCESS,
+				siteId
 			};
 
-			deepFreeze( domainsBefore );
+			const stateAfter = {
+				[ siteId ]: false
+			};
+
+			deepFreeze( stateBefore );
 			deepFreeze( action );
 
-			expectBeforeEqualToAfter( domainsBefore, action, domainsAfter );
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, requestReducer );
 		} );
 
-		it( 'never persists state because this is not implemented', () => {
-			const domainsBefore = {
-				77203074: {
-					data: null,
-					error: 'Unable to fetch site domains',
-					hasLoadedFromServer: false,
-					isRequesting: false
-				}
+		it( 'should update `requesting` state by site ID on FAILURE', () => {
+			const stateBefore = {
+				2916284: true
 			};
-			const action = { type: SERIALIZE };
+			const action = {
+				type: SITE_DOMAINS_REQUEST_FAILURE,
+				siteId
+			};
 
-			deepFreeze( domainsBefore );
+			const stateAfter = {
+				[ siteId ]: false
+			};
+
+			deepFreeze( stateBefore );
 			deepFreeze( action );
 
-			expectBeforeEqualToAfter( domainsBefore, action, {} );
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, requestReducer );
+		} );
+	} );
+
+	describe( '#errors()', () => {
+		it( 'should default to an empty object', () => {
+			expectBeforeEqualToAfter( undefined, {}, {}, errorsReducer );
 		} );
 
-		it( 'never loads persisted state because this is not implemented', () => {
-			const domainsBefore = {
-				77203074: {
-					data: null,
-					error: null,
-					hasLoadedFromServer: false,
-					isRequesting: false
-				},
-				2916284: {
-					data: [],
-					error: null,
-					hasLoadedFromServer: true,
-					isRequesting: false
-				}
+		it( 'should clean `errors` state by site ID on REQUEST', () => {
+			const stateBefore = {
+				[ siteId ]: errorMessageResponse
 			};
-			const action = { type: DESERIALIZE };
+			const action = createDomainsRequestAction( siteId );
+			const stateAfter = {
+				[ siteId ]: null
+			};
 
-			deepFreeze( domainsBefore );
+			deepFreeze( stateBefore );
 			deepFreeze( action );
 
-			expectBeforeEqualToAfter( domainsBefore, action, {} );
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, errorsReducer );
+		} );
+
+		it( 'should clean `errors` state by site ID on SUCCESS', () => {
+			const stateBefore = {
+				[ siteId ]: errorMessageResponse
+			};
+			const action = createDomainsRequestSuccessAction( siteId, errorMessageResponse );
+			const stateAfter = {
+				[ siteId ]: null
+			};
+
+			deepFreeze( stateBefore );
+			deepFreeze( action );
+
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, errorsReducer );
+		} );
+
+		it( 'should index `errors` state by site ID on FAILURE', () => {
+			const stateBefore = undefined;
+			const action = createDomainsRequestFailureAction( siteId, errorMessageResponse );
+			const stateAfter = {
+				[ siteId ]: errorMessageResponse
+			};
+
+			deepFreeze( action );
+
+			expectBeforeEqualToAfter( stateBefore, action, stateAfter, errorsReducer );
 		} );
 	} );
 } );
