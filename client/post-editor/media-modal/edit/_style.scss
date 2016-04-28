@@ -1,0 +1,33 @@
+.editor-media-modal-edit__content {
+	background: black;
+}
+
+.editor-media-modal-edit__toolbar {
+	flex: 1;
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+}
+
+.editor-media-modal-edit__toolbar-button {
+	color: white;
+	margin: 0 10px;
+}
+
+.editor-media-modal-edit__canvas-container {
+	flex: 10;
+	position: relative;
+	width: 100%;
+}
+
+.editor-media-modal-edit__canvas {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: auto;
+	height: auto;
+	max-height: 80%;
+	max-width: 80%;
+	transform: translate( -50%, -50% );
+}

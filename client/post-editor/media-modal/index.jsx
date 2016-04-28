@@ -20,6 +20,7 @@ var MediaLibrary = require( 'my-sites/media-library' ),
 	MediaModalSecondaryActions = require( './secondary-actions' ),
 	MediaModalDetail = require( './detail' ),
 	MediaModalGallery = require( './gallery' ),
+	MediaModalEdit = require( './edit' ),
 	MediaActions = require( 'lib/media/actions' ),
 	MediaUtils = require( 'lib/media/utils' ),
 	Dialog = require( 'components/dialog' ),
@@ -145,6 +146,7 @@ module.exports = React.createClass( {
 			case ModalViews.LIST: stat = 'view_list'; break;
 			case ModalViews.DETAIL: stat = 'view_detail'; break;
 			case ModalViews.GALLERY: stat = 'view_gallery'; break;
+			case ModalViews.EDIT: stat = 'view_edit'; break;
 		}
 
 		if ( stat ) {
@@ -280,16 +282,26 @@ module.exports = React.createClass( {
 				activeView={ this.state.activeView }
 				disabled={ isDisabled }
 				onDelete={ this.deleteMedia }
-				onChangeView={ this.setView } />,
-			{
-				action: 'cancel',
-				label: this.translate( 'Cancel' )
-			}
+				onChangeView={ this.setView } />
 		];
 
-		if ( ModalViews.GALLERY !== this.state.activeView && selectedItems.length > 1 &&
+		if ( ModalViews.EDIT === this.state.activeView ) {
+			buttons.push( {
+				action: 'reset',
+				label: this.translate( 'Reset' ),
+				onClick: this.setView.bind( this, ModalViews.DETAIL )
+			}, {
+				action: 'confirm',
+				label: this.translate( 'Done' ),
+				isPrimary: true,
+				onClick: this.setView.bind( this, ModalViews.DETAIL )
+			} );
+		} else if ( ModalViews.GALLERY !== this.state.activeView && selectedItems.length > 1 &&
 				! some( selectedItems, ( item ) => MediaUtils.getMimePrefix( item ) !== 'image' ) ) {
 			buttons.push( {
+				action: 'cancel',
+				label: this.translate( 'Cancel' )
+			}, {
 				action: 'confirm',
 				label: this.translate( 'Continue' ),
 				isPrimary: true,
@@ -298,6 +310,9 @@ module.exports = React.createClass( {
 			} );
 		} else {
 			buttons.push( {
+				action: 'cancel',
+				label: this.translate( 'Cancel' )
+			}, {
 				action: 'confirm',
 				label: this.props.labels.confirm || this.translate( 'Insert' ),
 				isPrimary: true,
@@ -355,6 +370,16 @@ module.exports = React.createClass( {
 						items={ this.props.mediaLibrarySelectedItems }
 						settings={ this.state.gallerySettings }
 						onUpdateSettings={ ( gallerySettings ) => this.setState( { gallerySettings } ) }
+						onChangeView={ this.setView } />
+				);
+				break;
+
+			case ModalViews.EDIT:
+				content = (
+					<MediaModalEdit
+						site={ this.props.site }
+						items={ this.props.mediaLibrarySelectedItems }
+						selectedIndex={ this.state.detailSelectedIndex }
 						onChangeView={ this.setView } />
 				);
 				break;

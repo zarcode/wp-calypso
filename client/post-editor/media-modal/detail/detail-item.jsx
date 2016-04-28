@@ -27,7 +27,8 @@ module.exports = React.createClass( {
 		hasPreviousItem: React.PropTypes.bool,
 		hasNextItem: React.PropTypes.bool,
 		onShowPreviousItem: React.PropTypes.func,
-		onShowNextItem: React.PropTypes.func
+		onShowNextItem: React.PropTypes.func,
+		onEdit: React.PropTypes.func
 	},
 
 	getDefaultProps: function() {
@@ -35,8 +36,35 @@ module.exports = React.createClass( {
 			hasPreviousItem: false,
 			hasNextItem: false,
 			onShowPreviousItem: noop,
-			onShowNextItem: noop
+			onShowNextItem: noop,
+			onEdit: noop
 		};
+	},
+
+	renderEditButton: function() {
+		var mimePrefix, Component;
+
+		if ( ! userCan( 'upload_files', this.props.site )
+			|| ! this.props.item ) {
+			return;
+		}
+
+		mimePrefix = MediaUtils.getMimePrefix( this.props.item );
+
+		if ( 'image' !== mimePrefix ) {
+			return;
+		}
+
+		return (
+			<button
+				className="button editor-media-modal-detail__edit"
+				onClick={ this.props.onEdit }>
+				<Gridicon icon="pencil" size={ 36 } />
+				<span className="editor-media-modal-detail__edit-text">
+					{ this.translate( 'Edit Image' ) }
+				</span>
+			</button>
+		);
 	},
 
 	renderFields: function() {
@@ -120,6 +148,7 @@ module.exports = React.createClass( {
 						{ this.renderNextItemButton() }
 					</div>
 					<div className="editor-media-modal-detail__sidebar">
+						{ this.renderEditButton() }
 						{ this.renderFields() }
 						<EditorMediaModalDetailFileInfo
 							item={ this.props.item } />

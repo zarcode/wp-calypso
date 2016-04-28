@@ -127,6 +127,12 @@
 	}
 }
 
+.editor-media-modal-edit__content {
+	@extend .editor-media-modal__content;
+	flex-direction: column;
+	top: 0px;
+}
+
 .editor-media-modal .notice {
 	z-index: z-index( '.dialog__backdrop', '.editor-media-modal .notice' );
 	margin-top: -4px;

@@ -95,9 +95,11 @@ const MediaModalSecondaryActions = React.createClass( {
 			} );
 		}
 
-		const canDeleteItems = selectedItems.length && every( selectedItems, ( item ) => {
-			return canUserDeleteItem( item, user, site );
-		} );
+		const canDeleteItems = ModalViews.EDIT !== activeView &&
+				selectedItems.length &&
+				every( selectedItems, ( item ) => {
+					return canUserDeleteItem( item, user, site );
+				} );
 
 		if ( ModalViews.GALLERY !== activeView && canDeleteItems ) {
 			buttons.push( {
