@@ -45,6 +45,7 @@ module.exports = React.createClass( {
 				<figure>
 					<div className="editor-media-modal-edit__content editor-media-modal__content">
 						<EditCanvas
+							site={ this.props.site }
 							item={ this.props.items[ this.props.selectedIndex  ] }
 							rotate={ this.state.rotate }
 							scaleX={ this.state.scaleX }

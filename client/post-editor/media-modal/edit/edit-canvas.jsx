@@ -13,6 +13,7 @@ module.exports = React.createClass( {
 	displayName: 'MediaModalDetailEditCanvas',
 
 	propTypes: {
+		site: React.PropTypes.object,
 		item: React.PropTypes.object,
 		rotate: React.PropTypes.number,
 		scaleX: React.PropTypes.number,
