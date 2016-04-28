@@ -21,7 +21,8 @@ export default [
 	{
 		name: 'insert_media_item',
 		icon: 'add-image',
-		item: <GridiconButton icon="image-multiple" label={ 'Add Media' } />
+		item: <GridiconButton icon="image-multiple" label={ 'Add Media' } />,
+		cmd: 'wpcomContactForm'
 	},
 	{
 		name: 'insert_contact_form',
@@ -32,6 +33,7 @@ export default [
 	{
 		name: 'insert_instragram_item',
 		icon: 'instagram',
-		item: <SocialLogoButton icon="instagram" label={ 'Instagram Widget' } />
+		item: <SocialLogoButton icon="instagram" label={ 'Instagram Widget' } />,
+		cmd: 'wpcomContactForm'
 	}
 ];
