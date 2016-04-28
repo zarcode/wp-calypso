@@ -25,7 +25,7 @@ const designRoutes = isLoggedIn
 
 const themesRoutes = isLoggedIn
 	? {
-		'/theme/:slug/:section?/:site_id?': [ details ],
+		'/theme/:slug/:section?/:site_id?': [ details ], // TODO: Add makeLayout here once /theme has its own module
 	}
 	: {
 		'/theme/:slug/:section?': [ details, makeLayout ],
