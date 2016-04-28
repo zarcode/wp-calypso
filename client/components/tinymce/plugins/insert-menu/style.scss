@@ -1,0 +1,31 @@
+.mce-container .mce-wpcom-insert-menu {
+	& .mce-caret {
+		padding-left: 12px;
+	}
+}
+
+.mce-container.mce-menu .mce-container-body .mce-wpcom-insert-menu__menu-item {
+	margin-left: -6px;
+
+	& svg {
+		fill: $gray;
+	}
+
+	& span {
+		color: darken( $gray, 40% );
+		display: inline-block;
+		font-family: $sans;
+		margin-left: 4px;
+		margin-top: 2px;
+	}
+
+	&:hover {
+		& svg {
+			fill: $blue-medium;
+		}
+
+		& span {
+			color: $blue-medium;
+		}
+	}
+}

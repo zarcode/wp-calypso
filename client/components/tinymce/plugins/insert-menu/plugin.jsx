@@ -1,54 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { renderToString } from 'react-dom/server';
+import merge from 'lodash/merge';
 import tinymce from 'tinymce/tinymce';
+import { renderToString } from 'react-dom/server';
 
 import Gridicon from 'components/gridicon';
 
-const initialize = editor => {
-	editor.addMenuItem( 'add_contact_form_menu', {
-		text: 'Add Contact Form',
-		icon: 'unlink',
-		onPostRender() {
-			this.innerHtml( renderToString(
-				<div><Gridicon icon="external" /> External</div>
-			) );
-		},
-		onClick() {
-			console.log( 'add contact form' );
-		}
-	} );
+import menuItems from './menu-items';
 
-	editor.addMenuItem( 'add_media_menu', {
-		text: 'Add media',
-		icon: 'image',
-		onPostRender() {
-			this.innerHtml( renderToString(
-				<div><Gridicon icon="image-multiple" /> Media</div>
-			) );
-		},
-		onClick() {
-			console.log( 'add media' );
-		}
-	} );
+const initialize = editor => {
+	menuItems.forEach( item =>
+		editor.addMenuItem( item.name, {
+			classes: 'wpcom-insert-menu__menu-item',
+			cmd: item.cmd,
+			onPostRender() {
+				this.innerHtml( renderToString( item.item ) )
+			}
+		} )
+	);
 
 	editor.addButton( 'wpcom_insert_menu', {
-		type: 'splitbutton',
-		text: 'Add',
+		type: 'menubutton',
 		title: 'Insert content',
 		classes: 'btn wpcom-insert-menu insert-menu',
-		menu: [
-			editor.menuItems[ 'add_media_menu' ],
-			editor.menuItems[ 'add_contact_form_menu' ]
-		],
+		menu: menuItems.map( ( { name } ) => editor.menuItems[ name ] ),
 		onPostRender() {
+			const parentNode = this.$el[0].children[0];
+			const oldNode = parentNode.children[0];
+			const newNode = document.createElement( 'span' );
+
 			ReactDOM.render(
-				<Gridicon icon="image-multiple" />,
-				this.$el[0].children[0]
+				<Gridicon icon={ menuItems[0].icon } />,
+				newNode
 			);
-		},
-		onclick() {
-			console.log( 'add media default' );
+
+			parentNode.replaceChild( newNode, oldNode );
 		}
 	} );
 };
