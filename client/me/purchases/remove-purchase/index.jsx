@@ -275,6 +275,7 @@ const RemovePurchase = React.createClass( {
 				<FormTextInput
 					name="another_reason_input"
 					id="another_reason_input"
+					className="remove-purchase__another-reason-input"
 					disabled={ ! this.state.isAnotherReason }
 				/>
 			</FormLabel>
