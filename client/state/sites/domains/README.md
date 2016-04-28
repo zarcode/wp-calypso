@@ -3,13 +3,17 @@ Site Domains
 
 A module for managing site domains data.
 
-## Actions
+# Actions
 
 Used in combination with the Redux store instance `dispatch` function, actions can be used in manipulating the current global state.
 
 ### `fetchSiteDomains( siteId: Number )`
 
 Fetches domains for the site with the given site ID.
+
+### `refreshSiteDomains( siteID: Number )`
+
+Clears domains and fetches them for the given site.
 
 ## Action creators
 
@@ -23,29 +27,36 @@ Fetches domains for the site with the given site ID.
 
 ### createDomainsRequestFailureAction( siteId, error )
 
+```es6
+import {
+	createDomainsReceiveAction,
+	createDomainsRequestAction,
+	createDomainsRequestSuccessAction,
+	createDomainsRequestFailureAction
+} from 'state/sites/domains/actions';
 
-### `fetchSiteDomainsCompleted( siteId: Number, data: Object )`
+const siteId = 2916284;
 
-Adds the domains fetched from the API to the set of domains for the given site ID.
+dispatch( createDomainsRequestAction( siteId ) );
 
-### `refreshSiteDomains( siteID: Number )`
+wpcom
+.site( siteId )
+.domainsList( ( error, response ) => {
+	if ( error ) {
+		return dispatch( createDomainsRequestFailureAction( siteId, error.message );
+	}
 
-Clears domains and fetches them for the given site.
-
-```js
-import { fetchSiteDomains, fetchSiteDomainsCompleted } from 'state/sites/domains/actions';
-
-dispatch( fetchSiteDomains( 555555555 ) );
-dispatch( fetchSiteDomainsCompleted( 555555555, { 1: { ... }, 1003: { ... }, 1008: { ... } } ) );
+	dispatch( createDomainsRequestSuccessAction( siteId ) );
+	dispatch( createDomainsReceiveAction( site,id, response.domains ) );
 ```
 
-## Reducer
+# Reducer
 Data from the aforementioned actions is added to the global state tree, under `sites.domains`, with the following structure:
 
 ```js
 state.sites.domains = {
 	items: {
-		2916284: [
+		[ siteId ]: [
 			{
 				autoRenewalDate: String,
 				autoRenewing: Number,
@@ -75,14 +86,11 @@ state.sites.domains = {
 	},
 	
 	requesting: [
-		2916284: false,
-		77203074: true
+		[ siteId ]: Boolean
 	],
 
 	errors: [
-		2916284: false,
-		77203074: false,
-		9834124: 'There was a problem fetching site domains. Please try again later or contact support.'
+		[ siteId ]: Boolean
 	]
 }
 ```
