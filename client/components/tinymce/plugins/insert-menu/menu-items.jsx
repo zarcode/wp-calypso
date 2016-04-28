@@ -3,21 +3,35 @@ import React from 'react';
 import Gridicon from 'components/gridicon';
 import SocialLogo from 'components/social-logo';
 
+const GridiconButton = ( { icon, label } ) => (
+	<div>
+		<Gridicon className="wpcom-insert-menu__menu-icon" icon={ icon } />
+		<span className="wpcom-insert-menu__menu-label">{ label }</span>
+	</div>
+);
+
+const SocialLogoButton = ( { icon, label } ) => (
+	<div>
+		<SocialLogo className="wpcom-insert-menu__menu-icon" icon={ icon } />
+		<span className="wpcom-insert-menu__menu-label">{ label }</span>
+	</div>
+);
+
 export default [
 	{
 		name: 'insert_media_item',
 		icon: 'add-image',
-		item: <div><Gridicon icon="image-multiple" /> Add Media</div>
+		item: <GridiconButton icon="image-multiple" label={ 'Add Media' } />
 	},
 	{
 		name: 'insert_contact_form',
 		icon: 'mention',
-		item: <div><Gridicon icon="mention" /> Add Contact Form</div>,
+		item: <GridiconButton icon="mention" label={ 'Add Contact Form' } />,
 		cmd: 'wpcomContactForm'
 	},
 	{
 		name: 'insert_instragram_item',
 		icon: 'instagram',
-		item: <div><SocialLogo icon="instagram" /> Instagram Widget</div>
+		item: <SocialLogoButton icon="instagram" label={ 'Instagram Widget' } />
 	}
 ];
