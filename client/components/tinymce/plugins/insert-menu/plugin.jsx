@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import merge from 'lodash/merge';
 import tinymce from 'tinymce/tinymce';
 import { renderToString } from 'react-dom/server';
 
