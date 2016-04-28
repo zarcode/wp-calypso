@@ -6,7 +6,7 @@ import SocialLogo from 'components/social-logo';
 export default [
 	{
 		name: 'insert_media_item',
-		icon: 'image-multiple',
+		icon: 'add-image',
 		item: <div><Gridicon icon="image-multiple" /> Add Media</div>
 	},
 	{
