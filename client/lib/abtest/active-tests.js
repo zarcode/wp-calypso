@@ -146,5 +146,15 @@ module.exports = {
 		defaultVariation: 'showPlugins',
 		allowExistingUsers: true,
 		allowAnyLocale: true
+	},
+	freePlanStorageLimit: {
+		datestamp: '20160428',
+		variations: {
+			standard: 95,
+			limited: 5
+		},
+		defaultVariation: 'standard',
+		allowExistingUsers: true,
+		allowAnyLocale: true
 	}
 };
