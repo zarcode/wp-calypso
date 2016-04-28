@@ -68,8 +68,8 @@ module.exports = {
 	nudges: {
 		datestamp: '20160101',
 		variations: {
-			showAll: 95,
-			hideAll: 5
+			showAll: 99,
+			hideAll: 1
 		},
 		defaultVariation: 'showAll',
 		allowExistingUsers: true
