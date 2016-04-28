@@ -1005,14 +1005,9 @@ Undocumented.prototype.readTagPosts = function( query, fn ) {
 };
 
 Undocumented.prototype.readWarmstart = function( query, fn ) {
-	var params = omit( query, 'userId' );
 	debug( '/read/warmstart' );
-
-	// Placeholder for actual endpoint for /read/warmstart
-	query.apiVersion = '1.3';
-	this.wpcom.req.get( '/read/following', query, fn );
-
-	// this.qpcom.req.get( '/read/warmstart/' + encodeURIComponent( query.userId ), params, fn )
+	query.apiVersion = '1.2';
+	this.wpcom.req.get( '/read/warmstart', query, fn );
 };
 
 Undocumented.prototype.followReaderTag = function( tag, fn ) {

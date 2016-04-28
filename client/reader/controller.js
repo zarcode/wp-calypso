@@ -730,11 +730,10 @@ module.exports = {
 	},
 
 	warmstart: function( context ) {
-		var user = getCurrentUser( context.store.getState() ),
-			WarmstartStream = require( 'reader/warmstart-stream' ),
+		var WarmstartStream = require( 'reader/warmstart-stream' ),
 			basePath = route.sectionify( context.path ),
 			fullAnalyticsPageTitle = analyticsPageTitle + ' > Warmstart',
-			warmstartPostsStore = feedStreamFactory( 'warmstart:' + user.ID ),
+			warmstartPostsStore = feedStreamFactory( 'warmstart' ),
 			mcKey = 'warmstart';
 
 		ensureStoreLoading( warmstartPostsStore, context );
@@ -753,7 +752,8 @@ module.exports = {
 					analyticsPageTitle,
 					mcKey
 				),
-				onUpdatesShown: trackUpdatesLoaded.bind( null, mcKey )
+				onUpdatesShown: trackUpdatesLoaded.bind( null, mcKey ),
+				showBack: userHasHistory( context )
 			} ),
 			document.getElementById( 'primary' )
 		);

@@ -141,17 +141,17 @@ function getStoreForFeatured( storeId ) {
 }
 
 function getStoreForWarmstart( storeId ) {
-	var userId = storeId.split( ':' )[ 1 ],
-		fetcher = function( query, callback ) {
-			query.userId = userId;
+	var fetcher = function( query, callback ) {
 			wpcomUndoc.readWarmstart( query, callback );
 		};
 
 	return new FeedStream( {
 		id: storeId,
 		fetcher: fetcher,
-		keyMaker: feedKeyMaker,
-		onNextPageFetch: addMetaToNextPageFetch
+		keyMaker: siteKeyMaker,
+		onGapFetch: limitSiteParams,
+		onUpdateFetch: limitSiteParams,
+		dateProperty: 'tagged_on'
 	} );
 }
 
@@ -185,6 +185,8 @@ function feedStoreFactory( storeId ) {
 			onUpdateFetch: limitSiteParamsForLikes,
 			dateProperty: 'date_liked'
 		} );
+	} else if ( storeId.indexOf( 'warmstart' ) === 0 ) {
+		store = getStoreForWarmstart( storeId );
 	} else if ( storeId.indexOf( 'feed:' ) === 0 ) {
 		store = getStoreForFeed( storeId );
 	} else if ( storeId.indexOf( 'tag:' ) === 0 ) {
@@ -197,8 +199,6 @@ function feedStoreFactory( storeId ) {
 		store = getStoreForFeatured( storeId );
 	} else if ( storeId.indexOf( 'search:' ) === 0 ) {
 		store = getStoreForSearch( storeId );
-	} else if ( storeId.indexOf( 'warmstart:' ) === 0 ) {
-		store = getStoreForWarmstart( storeId );
 	}else {
 		throw new Error( 'Unknown feed store ID' );
 	}

@@ -4,7 +4,7 @@ var EmptyContent = require( 'components/empty-content' ),
 	stats = require( 'reader/stats' ),
 	discoverHelper = require( 'reader/discover/helper' );
 
-var TagEmptyContent = React.createClass( {
+var WarmstartEmptyContent = React.createClass( {
 	shouldComponentUpdate: function() {
 		return false;
 	},
@@ -43,4 +43,4 @@ var TagEmptyContent = React.createClass( {
 	}
 } );
 
-module.exports = TagEmptyContent;
+module.exports = WarmstartEmptyContent;
