@@ -1,7 +1,9 @@
-.mce-container .mce-wpcom-insert-menu {
-	& .mce-caret {
-		padding-left: 12px;
-	}
+.mce-toolbar .mce-btn-group .mce-btn.mce-insert-menu button {
+	padding-right: 20px;
+}
+
+.mce-container .mce-wpcom-insert-menu .mce-caret {
+	padding-left: 12px;
 }
 
 .wpcom-insert-menu__menu-icon {
