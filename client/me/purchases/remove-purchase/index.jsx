@@ -46,17 +46,16 @@ const RemovePurchase = React.createClass( {
 	getInitialState() {
 		// shuffle reason order, but keep another_reason last
 		let reasonOrder = shuffle( [
-			'no_use',
-			'not_sure_includes',
-			'different_expected',
-			'want_delete'
+			'could_not_install',
+			'too_hard',
+			'did_not_include',
+			'only_need_free'
 		] );
 		reasonOrder.push( 'another_reason' );
 
 		return {
 			isDialogVisible: false,
 			isRemoving: false,
-			isAnotherReason: false,
 			checkedRadio: null,
 			reasonOrder: reasonOrder
 		};
@@ -114,8 +113,7 @@ const RemovePurchase = React.createClass( {
 
 	handleRadio( event ) {
 		this.setState( {
-			checkedRadio: event.currentTarget.value,
-			isAnotherReason: 'another_reason' === event.currentTarget.name
+			checkedRadio: event.currentTarget.value
 		} );
 	},
 
@@ -220,50 +218,88 @@ const RemovePurchase = React.createClass( {
 		let reasons = {},
 			ordered_reasons = [];
 
-		reasons.no_use = (
-			<FormLabel key="no_use">
+		let could_not_install_input = (
+			<FormTextInput
+				name="could_not_install_input"
+				id="could_not_install_input"
+				className="remove-purchase__reason-input"
+				placeholder={ this.translate( 'What plugin/theme were you trying to install?' ) } />
+		);
+		reasons.could_not_install = (
+			<FormLabel key="could_not_install">
 				<FormRadio
-					name="no_use"
-					value="no_use"
-					checked={ 'no_use' === this.state.checkedRadio }
+					name="could_not_install"
+					value="could_not_install"
+					checked={ 'could_not_install' === this.state.checkedRadio }
 					onChange={ this.handleRadio } />
-				<span>{ this.translate( 'I no longer use this upgrade.' ) }</span>
+				<span>{ this.translate( 'I couldn\'t install a plugin/theme I wanted.' ) }</span>
+				{ 'could_not_install' === this.state.checkedRadio ? could_not_install_input : null }
 			</FormLabel>
 		);
 
-		reasons.not_sure_includes = (
-			<FormLabel key="not_sure_includes">
+		let too_hard_input = (
+			<FormTextInput
+				name="too_hard_input"
+				id="too_hard_input"
+				className="remove-purchase__reason-input"
+				placeholder={ this.translate( 'Where did you run into problems?' ) } />
+		);
+		reasons.too_hard = (
+			<FormLabel key="too_hard">
 				<FormRadio
-					name="not_sure_includes"
-					value="not_sure_includes"
-					checked={ 'not_sure_includes' === this.state.checkedRadio }
+					name="too_hard"
+					value="too_hard"
+					checked={ 'too_hard' === this.state.checkedRadio }
 					onChange={ this.handleRadio } />
-				<span>{ this.translate( 'I\'m not sure what this upgrade includes.' ) }</span>
+				<span>{ this.translate( 'It was too hard to set up my site.' ) }</span>
+				{ 'too_hard' === this.state.checkedRadio ? too_hard_input : null }
 			</FormLabel>
 		);
 
-		reasons.different_expected = (
-			<FormLabel key="different_expected">
+		let did_not_include_input = (
+			<FormTextInput
+				name="did_not_include_input"
+				id="did_not_include_input"
+				className="remove-purchase__reason-input"
+				placeholder={ this.translate( 'What are we missing that you need?' ) } />
+		);
+		reasons.did_not_include = (
+			<FormLabel key="did_not_include">
 				<FormRadio
-					name="different_expected"
-					value="different_expected"
-					checked={ 'different_expected' === this.state.checkedRadio }
+					name="did_not_include"
+					value="did_not_include"
+					checked={ 'did_not_include' === this.state.checkedRadio }
 					onChange={ this.handleRadio } />
-				<span>{ this.translate( 'This upgrade doesn\'t work the way I thought it would.' ) }</span>
+				<span>{ this.translate( 'This upgrade didn\'t include what I needed.' ) }</span>
+				{ 'did_not_include' === this.state.checkedRadio ? did_not_include_input : null }
 			</FormLabel>
 		);
 
-		reasons.want_delete = (
-			<FormLabel key="want_delete">
+		let only_need_free_input = (
+			<FormTextInput
+				name="only_need_free_input"
+				id="only_need_free_input"
+				className="remove-purchase__reason-input"
+				placeholder={ this.translate( 'Is there anything we can do to improve our upgrades?' ) } />
+		);
+		reasons.only_need_free = (
+			<FormLabel key="only_need_free">
 				<FormRadio
-					name="want_delete"
-					value="want_delete"
-					checked={ 'want_delete' === this.state.checkedRadio }
+					name="only_need_free"
+					value="only_need_free"
+					checked={ 'only_need_free' === this.state.checkedRadio }
 					onChange={ this.handleRadio } />
-				<span>{ this.translate( 'I want to delete my site.' ) }</span>
+				<span>{ this.translate( 'All I need is the free plan.' ) }</span>
+				{ 'only_need_free' === this.state.checkedRadio ? only_need_free_input : null }
 			</FormLabel>
 		);
 
+		let another_reason_input = (
+			<FormTextInput
+				name="another_reason_input"
+				id="another_reason_input"
+				className="remove-purchase__reason-input" />
+		);
 		reasons.another_reason = (
 			<FormLabel key="another_reason">
 				<FormRadio
@@ -272,12 +308,7 @@ const RemovePurchase = React.createClass( {
 					checked={ 'another_reason' === this.state.checkedRadio }
 					onChange={ this.handleRadio } />
 				<span>{ this.translate( 'Another reason…' ) }</span>
-				<FormTextInput
-					name="another_reason_input"
-					id="another_reason_input"
-					className="remove-purchase__another-reason-input"
-					disabled={ ! this.state.isAnotherReason }
-				/>
+				{ 'another_reason' === this.state.checkedRadio ? another_reason_input : null }
 			</FormLabel>
 		);
 
@@ -288,10 +319,11 @@ const RemovePurchase = React.createClass( {
 		return (
 			<div>
 				<FormFieldset>
-					<FormLegend>{ this.translate( 'Please let us know why you are canceling:' ) }</FormLegend>
+					<FormLegend>{ this.translate( 'Please tell us why you are canceling:' ) }</FormLegend>
 					{ ordered_reasons }
-					<FormLabel>
-						{ this.translate( 'What could we do to improve? (optional)' ) }
+					<FormLabel
+						className="remove-purchase__improvement-input-label">
+						{ this.translate( 'What\'s one thing we could have done better? (optional)' ) }
 						<FormTextarea name="improvement_input" id="improvement_input" />
 					</FormLabel>
 				</FormFieldset>

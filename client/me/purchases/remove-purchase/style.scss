@@ -20,7 +20,11 @@
 	}
 }
 
-.remove-purchase__dialog .remove-purchase__another-reason-input {
-	margin: 4px 0 16px 24px;
+.remove-purchase__dialog .remove-purchase__reason-input {
+	margin: 4px 0 4px 24px;
 	width: calc( 100% - 24px );
+}
+
+.remove-purchase__dialog .remove-purchase__improvement-input-label {
+	margin-top: 16px;
 }
