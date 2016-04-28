@@ -2,7 +2,7 @@
  * Internal dependencies
  */
 import config from 'config';
-import { makeLoggedOutLayout } from 'controller';
+import { makeLayout } from 'controller';
 import { details, fetchThemeDetailsData } from './controller';
 
 // FIXME: These routes will SSR the logged-out Layout even if logged-in.
@@ -13,12 +13,12 @@ import { details, fetchThemeDetailsData } from './controller';
 // the layout.
 // FIXME: Also create loggedOut/multiSite/singleSite elements, depending on route.
 const designRoutes = {
-	'/design': [ makeLoggedOutLayout ],
-	'/design/type/:tier': [ makeLoggedOutLayout ]
+	'/design': [ makeLayout ],
+	'/design/type/:tier': [ makeLayout ]
 };
 
 const themesRoutes = {
-	'/theme/:slug/:section?/:site_id?': [ fetchThemeDetailsData, details, makeLoggedOutLayout ]
+	'/theme/:slug/:section?/:site_id?': [ fetchThemeDetailsData, details, makeLayout ]
 };
 
 const routes = Object.assign( {},

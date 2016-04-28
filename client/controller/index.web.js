@@ -10,9 +10,12 @@ import page from 'page';
  * Internal Dependencies
  */
 import Layout from 'layout';
+import LayoutLoggedOut from 'layout/logged-out';
 import layoutFocus from 'lib/layout-focus';
 import nuxWelcome from 'layout/nux-welcome';
 import translatorInvitation from 'layout/community-translator/invitation-utils';
+import { makeLayoutMiddleware } from './index.node.js';
+import { getCurrentUser } from 'state/current-user/selectors';
 import userFactory from 'lib/user';
 import sitesFactory from 'lib/sites-list';
 import debugFactory from 'debug';
@@ -20,28 +23,15 @@ import debugFactory from 'debug';
 /**
  * Re-export
  */
-export { makeLoggedOutLayout, setSection } from './index.node.js';
+export { setSection } from './index.node.js';
 
 const user = userFactory();
 const sites = sitesFactory();
 const debug = debugFactory( 'calypso:controller' );
 
-export function makeLayout( context, next ) {
-	const { store, primary, secondary, tertiary } = context;
-
-	context.layout = (
-		<ReduxWrappedLayout store={ store }
-			primary={ primary }
-			secondary={ secondary }
-			tertiary={ tertiary }
-		/>
-	);
-	next();
-}
-
 export const ReduxWrappedLayout = ( { store, primary, secondary, tertiary } ) => (
 	<ReduxProvider store={ store }>
-		{ user.get()
+		{ getCurrentUser( store.getState() )
 			? <Layout primary={ primary }
 				secondary={ secondary }
 				tertiary={ tertiary }
@@ -51,13 +41,15 @@ export const ReduxWrappedLayout = ( { store, primary, secondary, tertiary } ) =>
 				nuxWelcome={ nuxWelcome }
 				translatorInvitation={ translatorInvitation }
 			/>
-			: <Layout primary={ primary }
+			: <LayoutLoggedOut primary={ primary }
 				secondary={ secondary }
 				tertiary={ tertiary }
 				focus={ layoutFocus } />
 		}
 	</ReduxProvider>
 );
+
+export const makeLayout = makeLayoutMiddleware( ReduxWrappedLayout );
 
 /**
  * Isomorphic routing helper, client side

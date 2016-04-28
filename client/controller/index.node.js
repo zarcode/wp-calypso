@@ -11,6 +11,29 @@ import noop from 'lodash/noop';
  */
 import LayoutLoggedOut from 'layout/logged-out';
 
+export function makeLayoutMiddleware( LayoutComponent ) {
+	return ( context, next ) => {
+		const { store, primary, secondary, tertiary } = context;
+
+		context.layout = (
+			<LayoutComponent store={ store }
+				primary={ primary }
+				secondary={ secondary }
+				tertiary={ tertiary }
+			/>
+		);
+		next();
+	};
+}
+
+const ReduxWrappedLoggedOutLayout = ( { store, primary, secondary, tertiary } ) => (
+	<ReduxProvider store={ store }>
+		<LayoutLoggedOut primary={ primary }
+			secondary={ secondary }
+			tertiary={ tertiary } />
+	</ReduxProvider>
+); // TODO: Return logged-in layout once this is possible on the server.
+
 /**
  * @param { object } context -- Middleware context
  * @param { function } next -- Call next middleware in chain
@@ -18,17 +41,7 @@ import LayoutLoggedOut from 'layout/logged-out';
  * Produce a `LayoutLoggedOut` element in `context.layout`, using
  * `context.primary`, `context.secondary`, and `context.tertiary` to populate it.
 */
-export function makeLoggedOutLayout( context, next ) {
-	const { store, primary, secondary, tertiary } = context;
-	context.layout = (
-		<ReduxProvider store={ store }>
-			<LayoutLoggedOut primary={ primary }
-				secondary={ secondary }
-				tertiary={ tertiary } />
-		</ReduxProvider>
-	);
-	next();
-}
+export const makeLayout = makeLayoutMiddleware( ReduxWrappedLoggedOutLayout );
 
 export function setSection( section ) {
 	return ( context, next = noop ) => {
