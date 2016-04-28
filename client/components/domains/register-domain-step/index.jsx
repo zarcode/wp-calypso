@@ -44,7 +44,7 @@ let searchQueue = [],
 	lastSearchTimestamp = null,
 	searchCount = 0;
 
-function processSearchQueue() {
+function processSearchStatQueue() {
 	const queue = searchQueue.slice();
 	window.clearTimeout( searchStackTimer );
 	searchStackTimer = null;
@@ -57,25 +57,25 @@ function processSearchQueue() {
 					continue outerLoop;
 				}
 			}
-			reportSearch( queue[ i ] );
+			reportSearchStats( queue[ i ] );
 		}
 }
 
-function reportSearch( { query, section, timestamp } ) {
+function reportSearchStats( { query, section, timestamp } ) {
 	let timeDiffFromLastSearchInSeconds = 0;
 	if ( lastSearchTimestamp ) {
-		timeDiffFromLastSearchInSeconds = ( timestamp.valueOf() - lastSearchTimestamp.valueOf() ) / 1000;
+		timeDiffFromLastSearchInSeconds = Math.floor( ( timestamp.valueOf() - lastSearchTimestamp.valueOf() ) / 1000 );
 	}
 	lastSearchTimestamp = timestamp;
 	analytics.recordEvent( 'searchFormSubmit', query, section, timeDiffFromLastSearchInSeconds, ++searchCount );
 }
 
-function enqueueSearch( search ) {
+function enqueueSearchStatReport( search ) {
 	searchQueue.push( Object.assign( {}, search, { timestamp: Date.now() } ) );
 	if ( searchStackTimer ) {
 		window.clearTimeout( searchStackTimer );
 	}
-	searchStackTimer = window.setTimeout( processSearchQueue, 10000 );
+	searchStackTimer = window.setTimeout( processSearchStatQueue, 10000 );
 }
 
 var RegisterDomainStep = React.createClass( {
@@ -127,6 +127,7 @@ var RegisterDomainStep = React.createClass( {
 		if ( this.state.lastQuery ) {
 			this.onSearch( this.state.lastQuery );
 		}
+		this.recordEvent( 'searchFormView', this.props.analyticsSection );
 	},
 
 	componentDidUpdate: function( prevProps ) {
@@ -139,7 +140,7 @@ var RegisterDomainStep = React.createClass( {
 
 	componentWillUnmount() {
 		// Don't wait for the timeout if the user is navigating away
-		processSearchQueue();
+		processSearchStatQueue();
 	},
 
 	focusSearchCard: function() {
@@ -265,7 +266,7 @@ var RegisterDomainStep = React.createClass( {
 			return;
 		}
 
-		enqueueSearch( { query: searchQuery, section: this.props.analyticsSection } );
+		enqueueSearchStatReport( { query: searchQuery, section: this.props.analyticsSection } );
 
 		this.setState( {
 			lastDomainSearched: domain,
@@ -279,8 +280,14 @@ var RegisterDomainStep = React.createClass( {
 					if ( ! domain.match( /.{3,}\..{2,}/ ) || domain.match( /\.wordpress\.com/i ) ) {
 						return callback();
 					}
-
+					const timestamp = Date.now();
 					canRegister( domain, ( error, result ) => {
+						const timeDiff = Date.now() - timestamp;
+						if ( error && error.code ) {
+							this.recordEvent( 'domainAvailabilityReceive', domain, error.code, timeDiff, this.props.analyticsSection );
+						} else {
+							this.recordEvent( 'domainAvailabilityReceive', domain, 'available', timeDiff, this.props.analyticsSection );
+						}
 						if ( error && error.code === 'domain_registration_unavailable' ) {
 							return this.props.onDomainsAvailabilityChange( false );
 						} else if ( error ) {
@@ -296,27 +303,29 @@ var RegisterDomainStep = React.createClass( {
 						}
 
 						this.props.onDomainsAvailabilityChange( true );
-
 						callback( null, result );
 					} );
 				},
 				callback => {
 					const params = {
-						quantity: SUGGESTION_QUANTITY,
-						includeWordPressDotCom: this.props.includeWordPressDotCom,
-						vendor: abtest( 'domainSuggestionVendor' )
-					};
-
+							quantity: SUGGESTION_QUANTITY,
+							includeWordPressDotCom: this.props.includeWordPressDotCom,
+							vendor: abtest( 'domainSuggestionVendor' )
+						},
+						timestamp = Date.now();
 					wpcom.fetchDomainSuggestions( domain, params, ( error, domainSuggestions ) => {
+						const timeDiff = Date.now() - timestamp;
 						if ( error && error.statusCode === 503 ) {
+							this.recordEvent( 'searchResultsReceive', domain, ['ERROR503'], timeDiff, -1, this.props.analyticsSection );
 							return this.props.onDomainsAvailabilityChange( false );
 						} else if ( error && error.error ) {
+							this.recordEvent( 'searchResultsReceive', domain, [error.code || error.error], timeDiff, -1, this.props.analyticsSection );
 							error.code = error.error;
 							this.showValidationErrorMessage( domain, error );
 						}
 
 						this.props.onDomainsAvailabilityChange( true );
-
+						this.recordEvent( 'searchResultsReceive', domain, domainSuggestions, timeDiff, domainSuggestions.length, this.props.analyticsSection );
 						callback( error, domainSuggestions );
 					} );
 				}
