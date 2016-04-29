@@ -33,6 +33,7 @@ import SidebarButton from 'layout/sidebar/button';
 import SidebarFooter from 'layout/sidebar/footer';
 import DraftsButton from 'post-editor/drafts-button';
 import Tooltip from 'components/tooltip';
+import { isPremium, isBusiness } from 'lib/products-values';
 
 module.exports = React.createClass( {
 	displayName: 'MySitesSidebar',
@@ -272,8 +273,14 @@ module.exports = React.createClass( {
 			return null;
 		}
 
-		if ( ! config.isEnabled( 'manage/plugins/wpcom' ) && ! this.props.sites.hasSiteWithPlugins() ) {
-			return null;
+		if ( ! this.props.sites.hasSiteWithPlugins() ) {
+			if ( ! config.isEnabled( 'manage/plugins/wpcom' ) ) {
+				return null;
+			}
+
+			if ( abtest( 'wpcomPluginsInSidebar' ) === 'hidePlugins' ) {
+				return null;
+			}
 		}
 
 		if ( ( this.isSingle() && site.jetpack ) || ( ! this.isSingle() && this.hasJetpackSites() ) ) {
@@ -356,7 +363,16 @@ module.exports = React.createClass( {
 			return null;
 		}
 
-		const planLink = '/plans' + this.siteSuffix();
+		let planLink = '/plans' + this.siteSuffix();
+
+		// Show plan details for upgraded sites
+		if (
+			abtest( 'sidebarPlanLinkMyPlan' ) === 'plans/my-plan' &&
+			site &&
+			( isPremium( site.plan ) || isBusiness( site.plan ) )
+		) {
+			planLink = '/plans/my-plan' + this.siteSuffix();
+		}
 
 		let linkClass = 'upgrades-nudge';
 
@@ -384,7 +400,10 @@ module.exports = React.createClass( {
 	},
 
 	trackUpgradeClick: function() {
-		analytics.tracks.recordEvent( 'calypso_upgrade_nudge_cta_click', { cta_name: 'sidebar_upgrade_default' } );
+		analytics.tracks.recordEvent( 'calypso_upgrade_nudge_cta_click', {
+			cta_name: 'sidebar_upgrade_default',
+			cta_landing: abtest( 'sidebarPlanLinkMyPlan' )
+		} );
 		this.onNavigate();
 	},
 

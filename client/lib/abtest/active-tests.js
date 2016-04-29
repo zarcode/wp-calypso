@@ -46,6 +46,15 @@ module.exports = {
 		},
 		defaultVariation: 'original'
 	},
+	sidebarPlanLinkMyPlan: {
+		datestamp: '20160101',
+		variations: {
+			plans: 50,
+			'plans/my-plan': 50,
+		},
+		defaultVariation: 'plans',
+		allowExistingUsers: true,
+	},
 	domainSuggestionVendor: {
 		datestamp: '20160408',
 		variations: {
@@ -125,6 +134,16 @@ module.exports = {
 			annual: 10
 		},
 		defaultVariation: 'monthly',
+		allowExistingUsers: true,
+		allowAnyLocale: true
+	},
+	wpcomPluginsInSidebar: {
+		datestamp: '20160428',
+		variations: {
+			showPlugins: 90,
+			hidePlugins: 10
+		},
+		defaultVariation: 'showPlugins',
 		allowExistingUsers: true,
 		allowAnyLocale: true
 	}
