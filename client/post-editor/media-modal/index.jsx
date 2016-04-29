@@ -82,7 +82,8 @@ module.exports = React.createClass( {
 			filter: '',
 			activeView: props.initialActiveView || ModalViews.LIST,
 			detailSelectedIndex: 0,
-			gallerySettings: props.initialGallerySettings
+			gallerySettings: props.initialGallerySettings,
+			imageEditorState: {}
 		};
 	},
 
@@ -264,6 +265,16 @@ module.exports = React.createClass( {
 		this.setView( ModalViews.DETAIL );
 	},
 
+	resetImageEditor: function () {
+		this.setState( {
+			imageEditorState: {
+				rotate: 0,
+				scaleX: 1,
+				scaleY: 1
+			},
+		} );
+	},
+
 	getFirstEnabledFilter: function() {
 		if ( this.props.enabledFilters ) {
 			return head( this.props.enabledFilters );
@@ -289,7 +300,7 @@ module.exports = React.createClass( {
 			buttons.push( {
 				action: 'reset',
 				label: this.translate( 'Reset' ),
-				onClick: this.setView.bind( this, ModalViews.DETAIL )
+				onClick: this.resetImageEditor
 			}, {
 				action: 'confirm',
 				label: this.translate( 'Done' ),
@@ -380,7 +391,8 @@ module.exports = React.createClass( {
 						site={ this.props.site }
 						items={ this.props.mediaLibrarySelectedItems }
 						selectedIndex={ this.state.detailSelectedIndex }
-						onChangeView={ this.setView } />
+						onChangeView={ this.setView }
+						imageState={ this.state.imageEditorState } />
 				);
 				break;
 		}

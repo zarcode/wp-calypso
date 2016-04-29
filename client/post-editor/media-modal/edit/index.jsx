@@ -2,7 +2,9 @@
  * External dependencies
  */
 var React = require( 'react' ),
-	noop = require( 'lodash/noop' );
+	noop = require( 'lodash/noop' ),
+	merge = require( 'lodash/merge' ),
+	isEqual = require( 'lodash/isEqual' );
 
 /**
  * Internal dependencies
@@ -17,26 +19,44 @@ module.exports = React.createClass( {
 		site: React.PropTypes.object,
 		items: React.PropTypes.array,
 		selectedIndex: React.PropTypes.number,
-		onChangeView: React.PropTypes.func
+		onChangeView: React.PropTypes.func,
+		imageState: React.PropTypes.object
 	},
 
 	getDefaultProps: function() {
 		return {
 			selectedIndex: 0,
-			onChangeView: noop
+			onChangeView: noop,
+			imageState: {}
 		}
 	},
 
 	getInitialState: function() {
-		return {
-			rotate: 0,
-			scaleX: 1,
-			scaleY: 1
+		return this.getDefaultState( this.props );
+	},
+
+	getDefaultState: function ( props ) {
+		return  {
+			imageState: merge(
+				{
+					rotate: 0,
+					scaleX: 1,
+					scaleY: 1
+				},
+				props.imageState
+			)
 		};
 	},
 
-	stateChanged: function( state ) {
-		this.setState( state );
+	componentWillReceiveProps: function ( newProps ) {
+		if ( newProps.imageState &&
+			! isEqual( newProps.imageState, this.state.imageState ) ) {
+			this.setState( { imageState: newProps.imageState } );
+		}
+	},
+
+	imageStateChanged: function( state ) {
+		this.setState( { imageState: merge( {}, this.state.imageState, state ) } );
 	},
 
 	render: function() {
@@ -47,14 +67,12 @@ module.exports = React.createClass( {
 						<EditCanvas
 							site={ this.props.site }
 							item={ this.props.items[ this.props.selectedIndex  ] }
-							rotate={ this.state.rotate }
-							scaleX={ this.state.scaleX }
-							scaleY={ this.state.scaleY } />
+							rotate={ this.state.imageState.rotate }
+							scaleX={ this.state.imageState.scaleX }
+							scaleY={ this.state.imageState.scaleY } />
 						<EditToolbar
-							rotate={ this.state.rotate }
-							scaleX={ this.state.scaleX }
-							scaleY={ this.state.scaleY }
-							stateChanged={ this.stateChanged } />
+							imageState={ this.state.imageState }
+							imageStateChanged={ this.imageStateChanged } />
 					</div>
 				</figure>
 			</div>
