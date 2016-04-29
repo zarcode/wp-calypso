@@ -30,7 +30,7 @@ export default React.createClass( {
 		}
 
 		if ( this.props.noticeType === 'notExists' ) {
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'isDotCom' ) {
 			noticeValues.icon = 'block';
@@ -40,52 +40,58 @@ export default React.createClass( {
 		if ( this.props.noticeType === 'notWordPress' ) {
 			noticeValues.icon = 'block';
 			noticeValues.text = this.translate( 'That\'s not a WordPress site' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'notActiveJetpack' ) {
 			noticeValues.icon = 'block';
 			noticeValues.text = this.translate( 'Jetpack is deactivated' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'outdatedJetpack' ) {
 			noticeValues.icon = 'block';
 			noticeValues.text = this.translate( 'You need to update Jetpack before connecting' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'jetpackIsDisconnected' ) {
 			noticeValues.icon = 'link-break';
 			noticeValues.text = this.translate( 'Jetpack is disconnected' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'jetpackIsValid' ) {
 			noticeValues.status = 'is-success';
 			noticeValues.icon = 'plugins';
 			noticeValues.text = this.translate( 'Jetpack is connected' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'notJetpack' ) {
 			noticeValues.status = 'is-noticeType';
 			noticeValues.icon = 'status';
 			noticeValues.text = this.translate( 'Can\'t find Jetpack' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'alreadyConnected' ) {
 			noticeValues.status = 'is-success';
 			noticeValues.icon = 'status';
 			noticeValues.text = this.translate( 'This site is already connected!' );
-			return noticeValues
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'wordpress.com' ) {
 			noticeValues.text = this.translate( 'I think that\'s us ¯\\_(ツ)_/¯' );
 			noticeValues.status = 'is-warning';
 			noticeValues.icon = 'status';
-			return noticeValues
+			return noticeValues;
+		}
+		if ( this.props.noticeType === 'secretExpired' ) {
+			noticeValues.text = this.translate( 'Oops, that took a while. You\'ll have to try again.' );
+			noticeValues.status = 'is-error';
+			noticeValues.icon = 'notice';
+			return noticeValues;
 		}
 		if ( this.props.noticeType === 'authorizeError' ) {
 			noticeValues.text = this.translate( 'Error authorizing your site. Please contact support.' );
 			noticeValues.status = 'is-error';
 			noticeValues.icon = 'notice';
-			return noticeValues
+			return noticeValues;
 		}
 		return;
 	},
