@@ -145,13 +145,11 @@ function getStoreForWarmstart( storeId ) {
 			wpcomUndoc.readWarmstart( query, callback );
 		};
 
-	return new FeedStream( {
+	return new PagedStream( {
 		id: storeId,
 		fetcher: fetcher,
 		keyMaker: siteKeyMaker,
-		onGapFetch: limitSiteParams,
-		onUpdateFetch: limitSiteParams,
-		dateProperty: 'tagged_on'
+		perPage: 5
 	} );
 }
 
