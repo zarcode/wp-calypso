@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import moment from 'moment';
 import every from 'lodash/every';
 import some from 'lodash/some';
