@@ -46,9 +46,7 @@ var config = require( 'config' ),
 	bindWpLocaleState = require( 'lib/wp/localization' ).bindState,
 	supportUser = require( 'lib/user/support-user-interop' ),
 	isSectionIsomorphic = require( 'state/ui/selectors' ).isSectionIsomorphic,
-	createReduxStoreFromPersistedInitialState = require( 'state/initial-state' ).default,
-	// The following dependencies require the i18n mixin, so must be required after i18n is initialized
-	sections;
+	createReduxStoreFromPersistedInitialState = require( 'state/initial-state' ).default;
 
 function init() {
 	var i18nLocaleStringsObject = null;
@@ -297,7 +295,7 @@ function reduxStoreReady( reduxStore ) {
 	}
 
 	// Load the application modules for the various sections and features
-	sections = require( 'sections' );
+	const sections = require( 'sections' );
 	sections.load();
 
 	// delete any lingering local storage data from signup
