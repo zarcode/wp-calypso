@@ -37,11 +37,12 @@ export default class PostQueryManager extends QueryManager {
 				case 'after':
 				case 'before':
 				case 'modified_after':
-				case 'modified_before':
+				case 'modified_before': {
 					const queryDate = moment( value, moment.ISO_8601 );
 					const comparison = /after$/.test( key ) ? 'isAfter' : 'isBefore';
 					const field = /^modified_/.test( key ) ? 'modified' : 'date';
 					return queryDate.isValid() && moment( post[ field ] )[ comparison ]( queryDate );
+				}
 
 				case 'tag':
 				case 'category': {
