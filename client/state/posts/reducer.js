@@ -157,7 +157,7 @@ export function queryRequests( state = {}, action ) {
  */
 export function queries( state = {}, action ) {
 	switch ( action.type ) {
-		case POSTS_REQUEST_SUCCESS:
+		case POSTS_REQUEST_SUCCESS: {
 			const { siteId, query, posts } = action;
 			if ( ! state[ siteId ] ) {
 				state[ siteId ] = new PostQueryManager();
@@ -171,6 +171,7 @@ export function queries( state = {}, action ) {
 			return Object.assign( {}, state, {
 				[ siteId ]: nextPosts
 			} );
+		}
 
 		case POST_DELETE: {
 			if ( ! state[ action.siteId ] ) {
