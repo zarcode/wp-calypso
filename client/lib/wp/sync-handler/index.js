@@ -270,8 +270,8 @@ export class SyncHandler {
 }
 
 /**
- * Given a wpcom instance, returns an updated instance including a `withoutSync`
- * method to be used in intentional bypass of local sync handler behavior.
+ * Returns a modified wpcom instance including a `skipLocalSyncResult` method
+ * to be used in intentional bypass of local sync handler behavior.
  *
  * @param  {Object} wpcom WPCOM instance
  * @return {Object}       Modified WPCOM instance
