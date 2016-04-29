@@ -16,7 +16,8 @@ var EditorMediaModalDetailFields = require( './detail-fields' ),
 	EditorMediaModalDetailPreviewDocument = require( './detail-preview-document' ),
 	Gridicon = require( 'components/gridicon' ),
 	userCan = require( 'lib/site/utils' ).userCan,
-	MediaUtils = require( 'lib/media/utils' );
+	MediaUtils = require( 'lib/media/utils' ),
+	config = require( 'config' );
 
 module.exports = React.createClass( {
 	displayName: 'EditorMediaModalDetailItem',
@@ -44,8 +45,9 @@ module.exports = React.createClass( {
 	renderEditButton: function() {
 		var mimePrefix, Component;
 
-		if ( ! userCan( 'upload_files', this.props.site )
-			|| ! this.props.item ) {
+		if ( ! config.isEnabled( 'image-editor' ) ||
+			 ! userCan( 'upload_files', this.props.site ) ||
+			 ! this.props.item ) {
 			return;
 		}
 
