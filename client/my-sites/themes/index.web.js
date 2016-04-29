@@ -25,7 +25,7 @@ const designRoutes = isLoggedIn
 
 const themesRoutes = isLoggedIn
 	? {
-		'/theme/:slug/:section?/:site_id?': [ details ],
+		'/theme/:slug/:section?/:site_id?': [ siteSelection, details ],
 	}
 	: {
 		'/theme/:slug/:section?': [ details, makeLoggedOutLayout ],
