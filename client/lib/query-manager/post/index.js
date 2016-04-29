@@ -46,8 +46,8 @@ export default class PostQueryManager extends QueryManager {
 				case 'tag':
 				case 'category': {
 					const search = new RegExp( `^${ value }$`, 'i' );
-					const terms = 'tag' === key ? 'tags' : 'categories';
-					return some( post[ terms ], ( { name, slug } ) => {
+					const field = 'tag' === key ? 'tags' : 'categories';
+					return some( post[ field ], ( { name, slug } ) => {
 						return search.test( name ) || search.test( slug );
 					} );
 				}
