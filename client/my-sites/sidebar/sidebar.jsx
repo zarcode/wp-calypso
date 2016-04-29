@@ -56,6 +56,11 @@ module.exports = React.createClass( {
 		this.props.layoutFocus.set( 'preview' );
 	},
 
+	onPreviewSite( event ) {
+		event.preventDefault();
+		this.props.layoutFocus.set( 'preview' );
+	},
+
 	itemLinkClass: function( paths, existingClasses ) {
 		var classSet = {};
 
@@ -686,6 +691,7 @@ module.exports = React.createClass( {
 				<CurrentSite
 					sites={ this.props.sites }
 					siteCount={ this.props.user.get().visible_site_count }
+					onClick={ this.onPreviewSite }
 				/>
 				<SidebarMenu>
 					<ul>
