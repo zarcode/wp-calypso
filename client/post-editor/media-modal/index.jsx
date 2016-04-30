@@ -211,6 +211,29 @@ module.exports = React.createClass( {
 		PostStats.recordEvent( 'Upload Media' );
 	},
 
+	onImageEditorOpen: function () {
+		this.resetImageEditor();
+		this.setView( ModalViews.EDIT );
+	},
+
+	onAddAndEditImage: function () {
+		this.setDetailSelectedIndex( -1 );
+		this.resetImageEditor();
+
+		this.setView( ModalViews.EDIT );
+	},
+
+	onImageEditConfirm: function () {
+		var item = this.props.mediaLibrarySelectedItems[ this.state.detailSelectedIndex ];
+
+		if ( item ) {
+			this.setView( ModalViews.DETAIL );
+			return;
+		}
+
+		this.setView( ModalViews.LIST );
+	},
+
 	onFilterChange: function( filter ) {
 		if ( filter !== this.state.filter ) {
 			analytics.mc.bumpStat( 'editor_media_actions', 'filter_' + ( filter || 'all' ) );
@@ -305,7 +328,7 @@ module.exports = React.createClass( {
 				action: 'confirm',
 				label: this.translate( 'Done' ),
 				isPrimary: true,
-				onClick: this.setView.bind( this, ModalViews.DETAIL )
+				onClick: this.onImageEditConfirm
 			} );
 		} else if ( ModalViews.GALLERY !== this.state.activeView && selectedItems.length > 1 &&
 				! some( selectedItems, ( item ) => MediaUtils.getMimePrefix( item ) !== 'image' ) ) {
@@ -353,6 +376,7 @@ module.exports = React.createClass( {
 						enabledFilters={ this.props.enabledFilters }
 						search={ this.state.search }
 						onAddMedia={ this.onAddMedia }
+						onAddAndEditImage={ this.onAddAndEditImage }
 						onFilterChange={ this.onFilterChange }
 						onScaleChange={ this.onScaleChange }
 						onSearch={ this.onSearch }
@@ -370,7 +394,8 @@ module.exports = React.createClass( {
 						items={ this.props.mediaLibrarySelectedItems }
 						selectedIndex={ this.state.detailSelectedIndex }
 						onSelectedIndexChange={ this.setDetailSelectedIndex }
-						onChangeView={ this.setView } />
+						onChangeView={ this.setView }
+						onEdit={ this.onImageEditorOpen } />
 				);
 				break;
 

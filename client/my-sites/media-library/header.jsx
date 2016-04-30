@@ -18,6 +18,7 @@ import SegmentedControlItem from 'components/segmented-control/item';
 import UploadButton from './upload-button';
 import MediaLibraryUploadUrl from './upload-url';
 import { userCan } from 'lib/site/utils';
+import config from 'config';
 
 export default React.createClass( {
 	displayName: 'MediaLibraryHeader',
@@ -119,6 +120,20 @@ export default React.createClass( {
 		} );
 	},
 
+	renderUploadAndEditButton() {
+		if ( ! config.isEnabled( 'image-editor' ) ) {
+			return;
+		}
+
+		return (
+			<button className="button is-desktop"
+				onClick={ this.props.onAddAndEditImage } >
+				<Gridicon icon="pencil" />
+				{ this.translate( 'Add and edit image' ) }
+			</button>
+		);
+	},
+
 	renderUploadButtons() {
 		const { site, filter, onAddMedia } = this.props;
 
@@ -140,6 +155,7 @@ export default React.createClass( {
 					className="button is-desktop">
 					{ this.translate( 'Add via URL', { context: 'Media upload' } ) }
 				</button>
+				{ this.renderUploadAndEditButton() }
 				<button
 					ref={ this.setMoreOptionsContext }
 					onClick={ this.toggleMoreOptions.bind( this, ! this.state.isMoreOptionsVisible ) }
