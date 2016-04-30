@@ -7,7 +7,7 @@ var React = require( 'react' ),
 /**
  * Internal dependencies
  */
-var MediaUtils = require( 'lib/media/utils' );
+
 
 module.exports = React.createClass( {
 	displayName: 'MediaModalDetailEditCanvas',
@@ -20,7 +20,7 @@ module.exports = React.createClass( {
 		scaleY: React.PropTypes.number
 	},
 
-	getDefaultProps() {
+	getDefaultProps: function () {
 		return {
 			rotate: 0,
 			scaleX: 1,
@@ -28,18 +28,39 @@ module.exports = React.createClass( {
 		}
 	},
 
-	componentDidMount: function () {
-		const src = MediaUtils.url( this.props.item, {
-			photon: this.props.site && ! this.props.site.is_private
-		} );
+	getInitialState: function () {
+		return {
+			canvasWidth: this.props.item ? this.props.item.width : 0,
+			canvasHeight: this.props.item ? this.props.item.height : 0
+		};
+	},
 
+	componentWillReceiveProps: function ( newProps ) {
+		if ( this.props.src !== newProps.src ) {
+			this.initImage( newProps.src );
+		}
+	},
+
+	componentDidMount: function () {
+		if ( ! this.props.src ) {
+			return;
+		}
+
+		this.initImage( this.props.src );
+	},
+
+	initImage: function ( src ) {
 		this.image = new Image();
 		this.image.src = src;
 		this.image.onload = this.onLoadComplete;
 		this.image.onerror = this.onLoadComplete;
 	},
 
-	onLoadComplete: function () {
+	onLoadComplete: function ( event ) {
+		if ( event.type !== 'load' ) {
+			return;
+		}
+
 		this.drawImage();
 	},
 
@@ -48,8 +69,22 @@ module.exports = React.createClass( {
 	},
 
 	drawImage: function () {
-		var canvas = ReactDOM.findDOMNode( this.refs.canvas ),
-			context = canvas.getContext( '2d' );
+		var canvas, context;
+
+		if ( ! this.image ) {
+			return;
+		}
+
+		if ( this.state.canvasWidth !== this.image.width ||
+			 this.state.canvasHeight !== this.image.height) {
+			this.setState({
+				canvasWidth: this.image.width,
+				canvasHeight: this.image.height
+			});
+		}
+
+		canvas = ReactDOM.findDOMNode( this.refs.canvas );
+		context = canvas.getContext( '2d' );
 
 		context.clearRect(0,0,canvas.width,canvas.height);
 		context.save();
@@ -58,13 +93,14 @@ module.exports = React.createClass( {
 		context.rotate( this.props.rotate * Math.PI/180 );
 		context.drawImage( this.image, -this.image.width/2, -this.image.height/2 );
 		context.restore();
+
+		//canvas.toBlob(function(blob){ x = blob; }, "image/jpeg", 0.95); // JPEG at 95% quality
 	},
 
 	render: function () {
 		var rotatedMod = this.props.rotate % 180,
-			item = this.props.item,
-			width = rotatedMod === 0 ? item.width : item.height,
-			height = rotatedMod === 0 ? item.height : item.width;
+			width = rotatedMod === 0 ? this.state.canvasWidth : this.state.canvasHeight,
+			height = rotatedMod === 0 ? this.state.canvasHeight : this.state.canvasWidth;
 
 		return (
 			<div className="editor-media-modal-edit__canvas-container">
