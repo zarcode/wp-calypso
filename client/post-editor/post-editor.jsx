@@ -337,6 +337,7 @@ const PostEditor = React.createClass( {
 								maxWidth={ 1462 } />
 							<EditorNotice
 								{ ...this.state.notice }
+								layoutFocus={ layoutFocus }
 								onDismissClick={ this.hideNotice }
 							/>
 							<div className="editor__header">
@@ -398,7 +399,6 @@ const PostEditor = React.createClass( {
 						site={ site }
 						type={ this.props.type }
 						showDrafts={ this.props.showDrafts }
-						notice={ this.state.notice }
 						/>
 					{ this.iframePreviewEnabled() ?
 						<EditorPreview
