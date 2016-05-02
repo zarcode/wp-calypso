@@ -47,6 +47,7 @@ var config = require( 'config' ),
 	renderWithReduxStore = require( 'lib/react-helpers' ).renderWithReduxStore,
 	bindWpLocaleState = require( 'lib/wp/localization' ).bindState,
 	supportUser = require( 'lib/user/support-user-interop' ),
+	pushNotifications = require( 'lib/push-notifications' )(),
 	// The following components require the i18n mixin, so must be required after i18n is initialized
 	Layout;
 
@@ -186,7 +187,8 @@ function reduxStoreReady( reduxStore ) {
 			sites: sites,
 			focus: layoutFocus,
 			nuxWelcome: nuxWelcome,
-			translatorInvitation: translatorInvitation
+			translatorInvitation: translatorInvitation,
+			pushNotifications: pushNotifications
 		} );
 	} else {
 		analytics.setSuperProps( superProps );

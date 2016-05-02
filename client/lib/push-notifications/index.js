@@ -1,13 +1,21 @@
 /**
  * External dependencies
  */
-var Emitter = require( 'lib/mixins/emitter' ),
-	debug = require( 'debug' )( 'calypso:push-notifications' );
+import Emitter from 'lib/mixins/emitter';
+import debugFactory from 'debug';
+import moment from 'moment';
+import store from 'store';
 
-var initializeState,
-	registerServiceWorker;
+/**
+ * Internal dependencies
+ */
+import wpcom from 'lib/wp';
 
-initializeState = function() {
+let _pushNotifications = false;
+
+const debug = debugFactory( 'calypso:push-notifications' );
+
+function initializeState() {
 	// Only continue if the service worker supports notifications
 	if ( ! ( ( 'ServiceWorkerRegistration' in window ) && ( 'showNotification' in window.ServiceWorkerRegistration.prototype ) ) ) {
 		debug( 'Notifications not supported' );
@@ -28,26 +36,24 @@ initializeState = function() {
 	}
 
 	window.navigator.serviceWorker.ready.then( registerServiceWorker.bind( this ) );
-};
+}
 
-registerServiceWorker = function( serviceWorkerRegistration ) {
+function registerServiceWorker( serviceWorkerRegistration ) {
 	debug( 'Registering service worker' );
 	// Grab existing subscription if we have it
-	serviceWorkerRegistration.pushManager.getSubscription().then(
-		( function( subscription ) {
-			if ( ! subscription ) {
-				debug( 'Permission not yet granted' );
-				this.setState( 'unsubscribed' );
-				return;
-			}
+	serviceWorkerRegistration.pushManager.getSubscription().then( ( subscription ) => {
+		if ( ! subscription ) {
+			debug( 'Permission not yet granted' );
+			this.setState( 'unsubscribed' );
+			return;
+		}
 
-			this.setState( 'subscribed' );
-			this.saveSubscription( subscription );
-		} ).bind( this )
-	).catch( ( function( err ) {
+		this.setState( 'subscribed' );
+		this.saveSubscription( subscription );
+	} ).catch( ( err ) => {
 		debug( 'Error in getSubscription()', err );
-	} ).bind( this ) );
-};
+	} );
+}
 
 /**
  * PushNotifications component
@@ -66,16 +72,19 @@ PushNotifications.prototype.initialize = function() {
 	// Only register the service worker in browsers that support it.
 	if ( 'serviceWorker' in window.navigator ) {
 		window.navigator.serviceWorker.register( '/service-worker.js' ).then( initializeState.bind( this ) ).catch( function( err ) {
-			debug( 'Service worker not supported' );
+			debug( 'Service worker not supported', err );
 		} );
 	} else {
 		debug( 'Service worker not supported' );
 	}
 };
 
-PushNotifications.prototype.setState = function( state ) {
+PushNotifications.prototype.setState = function( state, callback ) {
 	debug( 'Switching state to %s', state );
 	this.state = state;
+	if ( 'function' === typeof callback ) {
+		callback( state );
+	}
 	this.emit( 'change' );
 };
 
@@ -85,33 +94,52 @@ PushNotifications.prototype.deleteSubscription = function() {
 };
 
 PushNotifications.prototype.saveSubscription = function( subscription ) {
-	// @todo: save the subscription
-	debug( 'Save subscription', subscription );
+	const sub = JSON.stringify( subscription ),
+		oldSub = store.get( 'push-subscription' ),
+		lastUpdated = store.get( 'push-subscription-updated' );
+
+	var age;
+
+	if ( lastUpdated ) {
+		age = moment().diff( moment( lastUpdated ), 'days' );
+	}
+
+	if ( oldSub !== sub || ( ! lastUpdated ) || age > 15 ) {
+		debug( 'Subscription needed updating.', age );
+		wpcom.undocumented().registerDevice( sub, 'chrome', 'Chrome', function() {
+			store.set( 'push-subscription', sub );
+			store.set( 'push-subscription-updated', moment().format() );
+			debug( 'Saved subscription', subscription );
+		} );
+	} else {
+		debug( 'Subscription did not need updating.', age );
+	}
 };
 
-PushNotifications.prototype.subscribe = function() {
+PushNotifications.prototype.subscribe = function( callback ) {
+	debug( 'Triggering browser UI for permission' );
 	if ( 'serviceWorker' in window.navigator ) {
-		window.navigator.serviceWorker.ready.then( ( function( serviceWorkerRegistration ) {
-			serviceWorkerRegistration.pushManager.subscribe( { userVisibleOnly: true } ).then( ( function( subscription ) {
-				this.setState( 'subscribed' );
+		window.navigator.serviceWorker.ready.then( ( serviceWorkerRegistration ) => {
+			serviceWorkerRegistration.pushManager.subscribe( { userVisibleOnly: true } ).then( ( subscription ) => {
+				this.setState( 'subscribed', callback );
 				this.saveSubscription( subscription );
-			} ).bind( this ) ).catch( ( function( err ) {
+			} ).catch( ( err ) => {
 				if ( 'denied' === window.Notification.permission ) {
 					debug( 'Permission denied' );
-					this.setState( 'denied' );
+					this.setState( 'denied', callback );
 				} else {
 					debug( 'Couldn\'t subscribe', err );
-					this.setState( 'unknown' );
+					this.setState( 'unknown', callback );
 				}
-			} ).bind( this ) );
-		} ).bind( this ) );
+			} );
+		} );
 	}
 };
 
 PushNotifications.prototype.unsubscribe = function() {
 	if ( 'serviceWorker' in window.navigator ) {
-		window.navigator.serviceWorker.ready.then( ( function( serviceWorkerRegistration ) {
-			serviceWorkerRegistration.pushManager.getSubscription().then( ( function( pushSubscription ) {
+		window.navigator.serviceWorker.ready.then( ( serviceWorkerRegistration ) => {
+			serviceWorkerRegistration.pushManager.getSubscription().then( ( pushSubscription ) => {
 				if ( ! pushSubscription ) {
 					this.setState( 'unsubscribed' );
 					return;
@@ -119,17 +147,17 @@ PushNotifications.prototype.unsubscribe = function() {
 
 				this.deleteSubscription();
 
-				pushSubscription.unsubscribe().then( ( function() {
+				pushSubscription.unsubscribe().then( () => {
 					this.setState( 'unsubscribed' );
-				} ).bind( this ) ).catch( ( function( err ) {
+				} ).catch( ( err ) => {
 					debug( 'Error while unsubscribing', err );
 					this.setState( 'unknown' );
-				} ).bind( this ) );
-			} ).bind( this ) ).catch( ( function( err ) {
+				} );
+			} ).catch( ( err ) => {
 				debug( 'Error while unsubscribing', err );
 				this.setState( 'unknown' );
-			} ).bind( this ) );
-		} ).bind( this ) );
+			} );
+		} );
 	}
 };
 
@@ -138,4 +166,9 @@ PushNotifications.prototype.unsubscribe = function() {
  */
 Emitter( PushNotifications.prototype );
 
-module.exports = PushNotifications;
+module.exports = function() {
+	if ( ! _pushNotifications ) {
+		_pushNotifications = new PushNotifications();
+	}
+	return _pushNotifications;
+};
